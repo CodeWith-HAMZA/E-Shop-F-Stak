@@ -13,7 +13,7 @@ exports._getAllProducts = async (req, res) => {
 };
 exports._getProductDetails = async (req, res) => {
   try {
-    const product = await ProductModel.findOne({ _id: req.params.id });
+    const product = await ProductModel.findById(req.params.id);
     return res.json({ success: true, product });
   } catch (error) {
     return res.status(500).json({
