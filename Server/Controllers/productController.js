@@ -3,7 +3,7 @@ const ProductModel = require("../Schemas/ProductModel");
 exports._getAllProducts = async (req, res) => {
 
   let q = { ...req.query }
-  // * Filtering The Products By Using "Regular-Expressions"
+  // * Filtering The Products By Using "Regular-Expressions" For The "Search-Keyword-Filteration"
   if (q["name"]) {
     q["name"] = new RegExp(q["name"])
   }
@@ -11,21 +11,21 @@ exports._getAllProducts = async (req, res) => {
 
   const { resultsPerPage, pageNumber, name } = q;
 
-  const ToBeRemovedFields = ['resultsPerPage', 'pageNumber']
-  ToBeRemovedFields.forEach(field => {
-    delete q[field]
-  })
-
+  // * Number Of Pages Skipped On Changing Page-Number With Respect To The Given-Results-Per-Page (Content-Limit)
   const SkippedProducts = resultsPerPage * ((pageNumber) - 1);
+
+  // * These Fields, Not That Important For The Query-Filteration
+  const ToBeRemovedFields = ['resultsPerPage', 'pageNumber']
+  ToBeRemovedFields.forEach(field => delete q[field])
+
 
 
   try {
 
-    console.log("first")
-
     console.log(q)
-    const products = await ProductModel.find(q).skip(Number(SkippedProducts)).limit(Number(resultsPerPage));
-    const totalResults = await ProductModel.countDocuments()
+    // * Fetching All The Products From the Database According To the  (Query)
+    const products = await ProductModel.find({ q }).skip(Number.parseInt(SkippedProducts)).limit(Number.parseInt(resultsPerPage));
+    const totalResults = await ProductModel.countDocuments();
 
     return res.status(200).json({ success: true, products, totalResults });
   } catch (error) {
