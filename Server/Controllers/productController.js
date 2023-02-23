@@ -1,20 +1,21 @@
 const ProductModel = require("../Schemas/ProductModel");
 
 exports._getAllProducts = async (req, res) => {
-  const SkippedProducts = 2, Totallimit = 4;
+  const Totallimit = 4, page = 1;
   let q = { ...req.query }
   // * Filtering The Products By Using "Regular-Expressions"
   if (q["name"]) {
     q["name"] = new RegExp(q["name"])
   }
 
-
+  const SkippedProducts = Totallimit * (page - 1);
 
   try {
 
 
+
     console.log(q)
-    const products = await ProductModel.find(q).skip(0).limit();
+    const products = await ProductModel.find(q).skip(SkippedProducts).limit(Totallimit);
 
     return res.status(200).json({ success: true, products });
   } catch (error) {
