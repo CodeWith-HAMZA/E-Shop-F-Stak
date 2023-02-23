@@ -8,7 +8,7 @@ const productSchema = new mongoose.Schema(
       required: [true, "Product Description is Requred"],
     },
     price: {
-      type: String,
+      type: Number,
       required: [true, "Product Price Is Required"],
     },
     rating: {
@@ -60,5 +60,5 @@ const productSchema = new mongoose.Schema(
   }
 );
 
-const ProductModel = mongoose.model("Prroduct", productSchema);
+const ProductModel = mongoose.model("EProducts", productSchema);
 module.exports = ProductModel
