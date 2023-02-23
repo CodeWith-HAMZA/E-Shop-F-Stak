@@ -8,16 +8,23 @@ exports._getAllProducts = async (req, res) => {
     q["name"] = new RegExp(q["name"])
   }
 
-  console.log(2)
 
-  const SkippedProducts = q.resultsPerPage * ((q.pageNumber) - 1);
+  const { resultsPerPage, pageNumber, name } = q;
+
+  const ToBeRemovedFields = ['resultsPerPage', 'pageNumber']
+  ToBeRemovedFields.forEach(field => {
+    delete q[field]
+  })
+
+  const SkippedProducts = resultsPerPage * ((pageNumber) - 1);
+
 
   try {
 
     console.log("first")
 
     console.log(q)
-    const products = await ProductModel.find(q).skip(Number(SkippedProducts)).limit(Number(q.resultsPerPage));
+    const products = await ProductModel.find(q).skip(Number(SkippedProducts)).limit(Number(resultsPerPage));
     const totalResults = await ProductModel.countDocuments()
 
     return res.status(200).json({ success: true, products, totalResults });
