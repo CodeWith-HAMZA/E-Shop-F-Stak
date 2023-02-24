@@ -55,10 +55,10 @@ const productSchema = new mongoose.Schema(
   {
     writeConcern: {
       j: true,
-      wtimeout: 1000
-    }
+      wtimeout: 1000,
+    },
   }
 );
 
 const ProductModel = mongoose.model("EProducts", productSchema);
-module.exports = ProductModel
+module.exports = ProductModel;
