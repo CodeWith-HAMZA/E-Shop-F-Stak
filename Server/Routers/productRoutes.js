@@ -7,7 +7,7 @@ const {
   _getProductDetails,
 } = require("../Controllers/productController");
 
-// * Product-Specific-APIs
+// * Product-Specific Routes
 productRouter.route("/getproducts").get(_getAllProducts);
 productRouter.route("/productdetails/:id").get(_getProductDetails);
 productRouter.route("/createproduct").post(_createProduct);
