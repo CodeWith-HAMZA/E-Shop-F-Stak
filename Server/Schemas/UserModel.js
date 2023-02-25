@@ -57,6 +57,8 @@ UserModelSchema.pre("save", async function (next) {
 
 // * Check Password With Bcryptjs
 UserModelSchema.methods.isCorrectPassword = async function (givenPassword) {
+  // * Matching the Given-Password (Entered) against the Hash of Already-Hashed-Password
+  console.log(this.password);
   const isCorrect = await bcrypt.compare(givenPassword, this.password);
   return isCorrect;
 };
