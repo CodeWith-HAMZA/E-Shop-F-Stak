@@ -1,9 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
-
 const jwt = require("jsonwebtoken");
-
-
 
 const UserModelSchema = new mongoose.Schema(
   {
@@ -60,7 +57,8 @@ UserModelSchema.pre("save", async function (next) {
 
 // * Check Password With Bcryptjs
 UserModelSchema.methods.isCorrectPassword = async function (givenPassword) {
-  return bcrypt.compare(givenPassword, this.password);
+  const isCorrect = await bcrypt.compare(givenPassword, this.password);
+  return isCorrect;
 };
 
 // * Generating JWT-Auth-Token By Individual-User-Payload
