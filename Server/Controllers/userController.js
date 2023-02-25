@@ -1,7 +1,7 @@
 const UserModel = require("../Schemas/UserModel");
 const validator = require("validator");
 
-// * Posting New-User
+// * Register New-User
 exports._registerUser = async (req, res) => {
   const { email, password } = req.body;
 
@@ -40,6 +40,8 @@ exports._registerUser = async (req, res) => {
       .json({ error, message: "Internal Server Error (500)" });
   }
 };
+
+// * Login User
 exports._loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
