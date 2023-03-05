@@ -1,0 +1,42 @@
+const jwt = require("jsonwebtoken");
+
+exports.checkUserAuthorization = async (req, res, next) => {
+  try {
+    // * User (Client) Must have {{Auth-JWT-Token}} To Proceed Further
+    if (req.headers["token"]) {
+      const token = req.headers["token"];
+
+      // ? Token Found In Headers Then, {Verify / Decode} If the token is VALID for the current User
+      const DecodedUser = await jwt.verify(token, "process.env.JWT_SECRETKEY");
+      req.user = DecodedUser;
+      req.token = token;
+
+      // * Proceed Further...
+      next();
+    } else {
+      return res.status(401).json({ message: "No token provided" });
+    }
+  } catch (error) {
+    // * Token is INVALID for the current User
+    return res
+      .status(500)
+      .json({ message: "Token Is Tempored or Manipulated ;(" });
+  }
+};
+
+// ? Middleware To Check If The "User" (Client) Is "Admin"(Special User) Or A (Normal User)
+exports.checkUserAdminAuthorization = function (checkRequiredRole = "admin") {
+  return (req, res, next) => {
+    // ? Checking If The "User" Has The Exact Same Role (admin or a normal user)
+    if (req.user.role !== checkRequiredRole) {
+      console.log("Admin role: " + req.user.role);
+
+      return res.status(403).json({
+        message: `${checkRequiredRole} are not Allowed to access this Resource 403`,
+      });
+    }
+
+    // ? But if it's "admin" Then Proceed Further...
+    next();
+  };
+};
