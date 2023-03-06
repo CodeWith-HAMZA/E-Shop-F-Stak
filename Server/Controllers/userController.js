@@ -27,12 +27,16 @@ exports._registerUser = async (req, res) => {
 
     // * Creating User In DB After Validation
     const user = await UserModel.create(req.body);
-    console.log("asouthoseuatoeh");
+
+    // console.log(user)
+    // * Password Token
+    const resetPasswordToken = await user.generateResetPasswordToken();
+    console.log(resetPasswordToken, "Password Reset Token");
 
     // * Generating Auth-Token Based On {{User-Payload}}
     const token = await user.generateJWTAuthToken();
-    console.log("asouthoseuatoeh");
 
+    // * Returning Response
     return res.status(201).json({ user, token });
   } catch (error) {
     return res

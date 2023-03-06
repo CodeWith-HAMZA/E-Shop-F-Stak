@@ -2,6 +2,8 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+const crypto = require("crypto");
+
 const UserModelSchema = new mongoose.Schema(
   {
     name: { type: String, required: [true, "Name Is Required"] },
@@ -52,7 +54,7 @@ UserModelSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
     this.password = await bcrypt.hash(this.password, 10);
   }
-  next();
+  return next();
 });
 
 // * Check Password With Bcryptjs
@@ -77,6 +79,16 @@ UserModelSchema.methods.generateJWTAuthToken = async function () {
     { expiresIn: "7d" }
   );
   return token;
+};
+
+UserModelSchema.methods.generateResetPasswordToken = async function () {
+  const resetPasswordToken = await crypto.randomBytes(20).toString("hex");
+  this.resetPasswordToken = resetPasswordToken;
+
+  // * Reset-Password-Token Expiration Of '10 mins'
+  this.resetPasswordTokenExpiration = Date.now() + 10 * 60 * 1000;
+  await this.save();
+  return resetPasswordToken;
 };
 const UserModel = mongoose.model("User", UserModelSchema);
 module.exports = UserModel;

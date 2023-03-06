@@ -8,31 +8,31 @@ exports.checkUserAuthorization = async (req, res, next) => {
 
       // ? Token Found In Headers Then, {Verify / Decode} If the token is VALID for the current User
       const DecodedUser = await jwt.verify(token, "process.env.JWT_SECRETKEY");
-      req.user = DecodedUser;
-      req.token = token;
+      req["user"] = DecodedUser;
+      req["token"] = token;
 
-      // * Proceed Further...
+      // * Proceed Further move on...
       next();
     } else {
       return res.status(401).json({ message: "No token provided" });
     }
   } catch (error) {
     // * Token is INVALID for the current User
-    return res
-      .status(500)
-      .json({ message: "Token Is Tempored or Manipulated ;(" });
+    return res.status(500).json({
+      message: "Token Is Tempored or Manipulated From Client Side ;(",
+    });
   }
 };
 
 // ? Middleware To Check If The "User" (Client) Is "Admin"(Special User) Or A (Normal User)
-exports.checkUserAdminAuthorization = function (checkRequiredRole = "admin") {
+exports.checkUserRoleAuthorization = function (checkRequiredRole = "admin") {
   return (req, res, next) => {
     // ? Checking If The "User" Has The Exact Same Role (admin or a normal user)
-    if (req.user.role !== checkRequiredRole) {
-      console.log("Admin role: " + req.user.role);
+    if (req.user["role"] !== checkRequiredRole) {
+      console.log("Admin role: " + req.user["role"]);
 
       return res.status(403).json({
-        message: `${checkRequiredRole} are not Allowed to access this Resource 403`,
+        message: `${req.user["role"]} role is not Allowed to access this Resource 403`,
       });
     }
 
