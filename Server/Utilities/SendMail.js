@@ -1,31 +1,26 @@
 const nodemailer = require("nodemailer");
-
-// async..await is not allowed in global scope, must use a wrapper
-async function SendMail() {
-  // Generate test SMTP service account from ethereal.email
-  // Only needed if you don't have a real mail account for testing
-  // let testAccount = await nodemailer.createTestAccount();
-
-  // create reusable transporter object using the default SMTP transport
+ 
+async function SendMail(ResetPasswordToken, ReceiverGmail) {
   const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,
+    host: "smtp.gmail.com", // * SMTP-GMAIL-HOST
+    port: 587, // * Gmail-Service-PORT
     secure: false,
-    // service: 'gmail',
-    // secure: false, // true for 465, false for other ports
+
+    // * Master-Gmail-Account (Sender)
     auth: {
-      user: "hs5924414@gmail.com", // generated ethereal user
-      pass: "dqdozhsgxogpupbx", // generated ethereal password
+      user: "hs5924414@gmail.com",
+      pass: "dqdozhsgxogpupbx",
     },
   });
 
   try {
+     
     // send mail with defined transport object
     const info = await transporter.sendMail({
-      from: "text@gmail.com", // sender address
-      to: "mrw58901878@gmail.com", // list of receivers
-      subject: "Password Reset", // Subject line
-      html: "<h1>ResetPasswordURL? </h1>", 
+      from: "test@gmail.com", // sender address
+      to: ReceiverGmail, // list of receivers
+      subject: `Password Reset`, // Subject line
+      html: `Reset Password ${ResetPasswordToken}`,
     });
 
     console.log("Message sent: %s", info.messageId);
@@ -33,3 +28,5 @@ async function SendMail() {
     console.log(error);
   }
 }
+
+module.exports = SendMail;

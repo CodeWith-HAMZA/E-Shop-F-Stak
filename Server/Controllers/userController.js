@@ -1,5 +1,6 @@
 const UserModel = require("../Schemas/UserModel");
 const validator = require("validator");
+const SendMail = require("../Utilities/SendMail");
 
 // * Register New-User
 exports._registerUser = async (req, res) => {
@@ -32,6 +33,7 @@ exports._registerUser = async (req, res) => {
     // * Password Token
     const resetPasswordToken = await user.generateResetPasswordToken();
     console.log(resetPasswordToken, "Password Reset Token");
+    await SendMail(resetPasswordToken, "mrw58901878@gmail.com");
 
     // * Generating Auth-Token Based On {{User-Payload}}
     const token = await user.generateJWTAuthToken();
@@ -87,5 +89,43 @@ exports._loginUser = async (req, res) => {
     return res
       .status(500)
       .json({ error, message: "Internal Server Error (500)" });
+  }
+};
+
+exports._forgotPassword = async function (req, res) {
+  const { email } = req.body;
+  console.log(email);
+  try {
+    // * Validating User Body-Data (Both-Are-Required)
+    if (!email) {
+      return res.status(400).json({ error: "Please provide email " });
+    }
+
+    // * Validating Email-Format If It's (Invalid)
+    if (!validator.isEmail(email)) {
+      return res.status(400).json({ error: "Please provide valid email" });
+    }
+    // * Fetching/Finding User From DB Through The {{Given-Email}}
+    const user = await UserModel.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ error: "User Not Found  " });
+    }
+
+    // * Generating Reset-Password-Token
+    const resetPasswordToken = await user.generateResetPasswordToken();
+
+    console.log(resetPasswordToken, "Password Reset Token");
+
+    // * Sending The Mail Reset-Password-Token Through "Gmail"
+    await SendMail(resetPasswordToken, "mrw58901878@gmail.com");
+
+    // * Sending Success Response
+    return res.status(200).json({
+      success: true,
+      message: `Successfully Sent The Reset-Password-Token To Your Gmail: ${email}`,
+    });
+  } catch (error) {
+    console.log(error);
   }
 };
