@@ -1,7 +1,7 @@
 const UserModel = require("../Schemas/UserModel");
 const validator = require("validator");
 const SendMail = require("../Utilities/SendMail");
-
+const JWT = require("jsonwebtoken");
 // * Register New-User
 exports._registerUser = async (req, res) => {
   const { email, password } = req.body;
@@ -93,7 +93,7 @@ exports._loginUser = async (req, res) => {
 };
 
 exports._forgotPassword = async function (req, res) {
-  const { email } = req.body;
+  const { email } = req.body; // * Getting {{Email}} From {{Body}}
   console.log(email);
   try {
     // * Validating User Body-Data (Both-Are-Required)
@@ -112,13 +112,13 @@ exports._forgotPassword = async function (req, res) {
       return res.status(404).json({ error: "User Not Found  " });
     }
 
-    // * Generating Reset-Password-Token
-    const resetPasswordToken = await user.generateResetPasswordToken();
+    // * Generating Reset-Password-Token Through JWT-Token
+    const resetPasswordToken = await user.generateJWTAuthToken();
 
     console.log(resetPasswordToken, "Password Reset Token");
 
-    // * Sending The Mail Reset-Password-Token Through "Gmail"
-    await SendMail(resetPasswordToken, "mrw58901878@gmail.com");
+    // * Sending Reset-Password-Token Through On The {{Given-Gmail}}
+    await SendMail(resetPasswordToken, email);
 
     // * Sending Success Response
     return res.status(200).json({
@@ -127,5 +127,64 @@ exports._forgotPassword = async function (req, res) {
     });
   } catch (error) {
     console.log(error);
+  }
+};
+
+
+exports._resetPassword = async function (req, res) {
+  const { resetPasswordToken } = req.params;
+  const { password, confirmPassword } = req.body;
+
+  try {
+    // * Decoding User Through The Provided Token
+    const user = await JWT.verify(
+      resetPasswordToken,
+      "process.env.JWT_SECRETKEY"
+    );
+
+    // * User Decoded Successfully Through JWT-Token
+    if (user) {
+      // * Finding User By Its Email(Decoded Through JWT-Token) through "Params"
+      const User = await UserModel.findOne({ email: user.email });
+
+      // * Password And ConfirmPassword Must be Defined & Same
+      if (password && confirmPassword && password === confirmPassword) {
+        console.log(User);
+
+        // * Updating user's Password
+        User["password"] = password;
+
+        // * Saving The User-Document With The Changed-Password Into DB
+        await User.save();
+
+        return res.status(200).json({
+          success: true,
+          message:
+            "successfully Reseted Your Password Now You Can Login With Your New Password",
+        });
+      }
+      return res.status(403).json({
+        success: false,
+        message:
+          "Kindly, Check Your Password And Confirm-Password If They Aren't The Same Or Empty",
+      });
+    }
+    return res.status(404).json({ success: false, message: "User Not Found" });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error (500)", error });
+  }
+};
+
+
+
+// * LOGIN-REQUIRED, MUST SEND {{AUTH-TOKEN}} Through {{Headers}}
+exports._getUserDetails = async function (req, res) {
+  try {
+    const user = await UserModel.findById(req.user["_id"]);
+    return res.status(200).json({ success: true, user });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: "Internal Server Error (500)" });
   }
 };

@@ -82,13 +82,7 @@ UserModelSchema.methods.generateJWTAuthToken = async function () {
 };
 
 UserModelSchema.methods.generateResetPasswordToken = async function () {
-  const resetPasswordToken = await crypto.randomBytes(20).toString("hex");
-  this.resetPasswordToken = resetPasswordToken;
-
-  // * Reset-Password-Token Expiration Of '10 mins'
-  this.resetPasswordTokenExpiration = Date.now() + 10 * 60 * 1000;
-  await this.save();
-  return resetPasswordToken;
+  console.log("Reset Password Token Generated Kro");
 };
 const UserModel = mongoose.model("User", UserModelSchema);
 module.exports = UserModel;

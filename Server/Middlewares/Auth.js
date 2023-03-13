@@ -12,7 +12,7 @@ exports.checkUserAuthorization = async (req, res, next) => {
       req["token"] = token;
 
       // * Proceed Further move on...
-      next();
+      return next();
     } else {
       return res.status(401).json({ message: "No token provided" });
     }
@@ -37,6 +37,6 @@ exports.checkUserRoleAuthorization = function (checkRequiredRole = "admin") {
     }
 
     // ? But if it's "admin" Then Proceed Further...
-    next();
+    return next();
   };
 };
