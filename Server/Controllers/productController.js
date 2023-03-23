@@ -11,7 +11,7 @@ exports._getAllProducts = async (req, res) => {
   // * Conditionally Appending Price-Filteration-Fields (Adding Multiple Fields To The Price Field)
   q["price"] = {
     ...(q["lt"] && { $lt: q["lt"] }),
-    ...(q["lt"] && { $gt: q["gt"] }),
+    ...(q["gt"] && { $gt: q["gt"] }),
   };
 
   const { resultsPerPage, pageNumber, name } = q;
@@ -27,7 +27,7 @@ exports._getAllProducts = async (req, res) => {
     console.log(q);
 
     // * Fetching All The Products From the Database According To the  (Query)
-    const products = await ProductModel.find({}, ["name", "price"], {
+    const products = await ProductModel.find({ ...q }, ["name", "price"], {
       limit: Number.parseInt(resultsPerPage),
       skip: Number.parseInt(SkippedProducts),
     });
@@ -108,4 +108,19 @@ exports._deleteProduct = async (req, res) => {
       updatedProduct,
     });
   }
+};
+
+exports._createProductReview = async (req, res) => {
+  const { rating, comment, name, productId } = req.body;
+  const review = {
+    rating: ~~rating,
+    comment,
+    name,
+    user: req.user["_id"],
+  }; 
+   const product = await ProductModel.findById(productId);
+   console.log(product)
+  console.log(productId)
+
+
 };

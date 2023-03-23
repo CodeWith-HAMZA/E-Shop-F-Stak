@@ -5,6 +5,7 @@ const {
   _updateProduct,
   _deleteProduct,
   _getProductDetails,
+  _createProductReview,
 } = require("../Controllers/productController");
 const {
   checkUserRoleAuthorization,
@@ -12,19 +13,27 @@ const {
 } = require("../Middlewares/Auth");
 
 // * Product-Specific Routes
+productRouter.route("/getproducts").get((req, res, next) => {
+  next();
+}, _getAllProducts);
+
+productRouter.route("/productdetails/:id").get(_getProductDetails);
 productRouter
-  .route("/getproducts")
-  .get(
-    (req, res, next)=> {
-          next()
-    },
+  .route("/createproduct")
+  .post(
     checkUserAuthorization,
     checkUserRoleAuthorization("admin"),
-    _getAllProducts
+    _createProduct
   );
-productRouter.route("/productdetails/:id").get(_getProductDetails);
-productRouter.route("/createproduct").post(_createProduct);
-productRouter.route("/updateproduct").put(_updateProduct);
+productRouter
+  .route("/updateproduct")
+  .put(
+    checkUserAuthorization,
+    checkUserRoleAuthorization("admin"),
+    _updateProduct
+  );
 productRouter.route("/deleteproduct").delete(_deleteProduct);
+productRouter.route("/productReview").post(checkUserAuthorization, _createProductReview);
+
 
 module.exports = productRouter;
