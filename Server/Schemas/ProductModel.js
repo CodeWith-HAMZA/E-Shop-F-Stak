@@ -11,7 +11,7 @@ const productSchema = new mongoose.Schema(
       type: Number,
       required: [true, "Product Price Is Required"],
     },
-    rating: {
+    ratings: {
       type: Number,
       default: 0,
     },

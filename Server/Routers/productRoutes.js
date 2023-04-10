@@ -6,6 +6,8 @@ const {
   _deleteProduct,
   _getProductDetails,
   _createProductReview,
+  _getAllReviews,
+  _getProductReviews,
 } = require("../Controllers/productController");
 const {
   checkUserRoleAuthorization,
@@ -26,14 +28,20 @@ productRouter
     _createProduct
   );
 productRouter
-  .route("/updateproduct")
+  .route("/updateproduct/:id")
   .put(
     checkUserAuthorization,
     checkUserRoleAuthorization("admin"),
     _updateProduct
   );
-productRouter.route("/deleteproduct").delete(_deleteProduct);
-productRouter.route("/productReview").post(checkUserAuthorization, _createProductReview);
+productRouter.route("/deleteproduct/:id").delete(_deleteProduct);
+productRouter
+  .route("/postReview")
+  .patch(checkUserAuthorization, _createProductReview);
 
+// * Get All Reviews Of A Single Products
+productRouter.route("/getAllReviews/:productId").get(_getProductReviews);
+
+productRouter.route("/deleteA/:productId").delete();
 
 module.exports = productRouter;

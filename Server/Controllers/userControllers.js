@@ -60,8 +60,8 @@ exports._registerUser = async (req, res) => {
 
 // * Login User
 exports._loginUser = async (req, res) => {
+  const { email, password } = req.body;
   try {
-    const { email, password } = req.body;
     if (!email || !password) {
       return res
         .status(400)
@@ -197,7 +197,7 @@ exports._resetPassword = async function (req, res) {
   } catch (error) {
     return res
       .status(500)
-      .json({ success: false, message: "Internal Server Error (500)", error });
+      .json({ success: false, message: "Internal Server Error 500)", error });
   }
 };
 
@@ -265,16 +265,16 @@ exports._changePassword = async function (req, res) {
   }
 };
 
-// * Update User's Profile
+// * LOGIN-REQUIRED, Update User's Profile  
 exports._updateProfile = async function (req, res) {
   try {
     const { email, name, role } = req.body;
 
     // * Conditionally Appending Properties, These Properties Are Comming From {{req.body}} (client-side)
     const newUserData = {
-      ...(name && { name }),
-      ...(email && { email }),
-      ...(role && { role }),
+      ...(name ? { name } : {}),
+      // ...(email ? { email } : {}),
+      ...(role ? { role } : {}),
     };
     // Would Update The Doc With This Provided Information -> email, name, role, profile-pic
 
@@ -288,7 +288,11 @@ exports._updateProfile = async function (req, res) {
     console.log(User);
     return res
       .status(200)
-      .json({ success: true, message: "Updated Your Account Successfully  ", User });
+      .json({
+        success: true,
+        message: "Updated Your Account Successfully  ",
+        User,
+      });
   } catch (error) {
     return res
       .status(500)

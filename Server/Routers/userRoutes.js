@@ -45,12 +45,13 @@ userRouter.route("/resetpassword/:resetPasswordToken").put(_resetPassword);
 userRouter.route("/myself").get(checkUserAuthorization, _getUserDetails);
 
 // TODO: Make PUT-Request & Provide
-userRouter.route("/updateProfile").put(checkUserAuthorization, _updateProfile);
+userRouter.route("/updateprofile").put(checkUserAuthorization, _updateProfile);
 
 // TODO: Make PUT-Request & Provide {{Auth-Token}} Through Headers
 userRouter
   .route("/updatePassword")
   .put(checkUserAuthorization, _changePassword);
+ 
 
 /*
  * Admin-Routes
@@ -80,4 +81,6 @@ userRouter
     checkUserRoleAuthorization("admin"),
     _deleteSingleUser
   );
+
+
 module.exports = userRouter;

@@ -1,0 +1,60 @@
+[
+  {
+    "_id": "c9f3661f-6974-4c57-9e8c-a1de8747cb61",
+    "colId": "a95c8c7a-bc85-4ca3-90c4-5612c2642d26",
+    "containerId": "",
+    "name": "Rge",
+    "url": "http://localhost:3000/api/products/getproducts?name=moto&resultsPerPage=3&pageNumber=1",
+    "method": "GET",
+    "sortNum": 10000,
+    "created": "2023-03-29T14:34:04.834Z",
+    "modified": "2023-03-29T15:39:18.258Z",
+    "headers": [
+      {
+        "name": "gt",
+        "value": "12",
+        "isDisabled": true
+      },
+      {
+        "name": "lt",
+        "value": "34",
+        "isDisabled": true
+      },
+      {
+        "name": "name",
+        "value": "moto",
+        "isDisabled": true
+      }
+    ],
+    "params": [
+      {
+        "name": "gt",
+        "value": "100",
+        "isDisabled": true,
+        "isPath": false
+      },
+      {
+        "name": "lt",
+        "value": "11000",
+        "isDisabled": true,
+        "isPath": false
+      },
+      {
+        "name": "name",
+        "value": "moto",
+        "isPath": false
+      },
+      {
+        "name": "resultsPerPage",
+        "value": "3",
+        "isPath": false
+      },
+      {
+        "name": "pageNumber",
+        "value": "1",
+        "isPath": false
+      }
+    ],
+    "tests": []
+  }
+]

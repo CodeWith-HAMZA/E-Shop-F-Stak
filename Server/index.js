@@ -1,6 +1,10 @@
+
 const app = require("./app");
+const ConnectDB = require("./Configs/ConnectDB");
 const port = 3000; 
 
+// * Connect To DB
+ConnectDB();
 
 // * Server Is Listening On 3000
 app.listen(port, () => {

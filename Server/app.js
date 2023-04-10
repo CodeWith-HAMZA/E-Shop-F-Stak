@@ -4,10 +4,10 @@ const ConnectDB = require("./Configs/ConnectDB");
 const app = express();
 const productRouter = require("./Routers/productRoutes");
 const userRouter = require("./Routers/userRoutes");
-app.use(express.json());
+app.use(express.json()); // for Parsing-JSON
+// app.use(express.urlencoded({extended: true})) // for URL-ENCODED
 
-// * Connect To DB
-ConnectDB();
+
 
 // * All-Routes
 app.use("/api/products", productRouter);
