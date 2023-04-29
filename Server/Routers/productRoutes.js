@@ -42,6 +42,6 @@ productRouter
 // * Get All Reviews Of A Single Products
 productRouter.route("/getAllReviews/:productId").get(_getProductReviews);
 
-productRouter.route("/deleteA/:productId").delete();
+// productRouter.route("/deleteA/:productId").delete();
 
 module.exports = productRouter;
