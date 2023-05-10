@@ -8,11 +8,9 @@ const userRouter = require("./Routers/userRoutes");
 app.use(express.json()); // for Parsing-JSON
 // app.use(express.urlencoded({extended: true})) // for URL-ENCODED
 
-
-
 // * All-Routes
-app.use("/api/products", productRouter);
-app.use("/api/user", userRouter);
+app.use("/api/v1", productRouter);
+app.use("/api/v1/users", userRouter);
 app.use("/api/orders", orderRouter);
 
 module.exports = app;

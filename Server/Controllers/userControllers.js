@@ -5,10 +5,19 @@ const SendMail = require("../Utilities/SendMail");
 const JWT = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const { trace } = require("../Routers/userRoutes");
-// * Register New-User
+
+/**
+ * Registers a new user with the given email and password.
+ * @param {Object} req - The request object containing the user's email and password.
+ * @param {string} req.body.email - The email of the user to be registered.
+ * @param {string} req.body.password - The password of the user to be registered.
+ * @param {Object} res - The response object.
+ * @returns {Object} The response object containing the newly created user and a JWT auth token.
+ * @throws {Object} Returns an error object with a message if there is an issue with the request.
+ */
 exports._registerUser = async (req, res) => {
   const { email, password } = req.body;
-
+  console.log("first");
   try {
     // * Validating User Body-Data (Both-Are-Required)
     if (!email || !password) {
@@ -58,7 +67,14 @@ exports._registerUser = async (req, res) => {
   }
 };
 
-// * Login User
+/**
+ * Logs in a user with the given email and password.
+ * @param {Object} req - The request object containing the user's email and password.
+ * @param {string} req.body.email - The email of the user.
+ * @param {string} req.body.password - The password of the user.
+ * @param {Object} res - The response object.
+ * @returns {Object} The user object and a JWT token if the login is successful, or an error message if it fails.
+ */
 exports._loginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -103,6 +119,13 @@ exports._loginUser = async (req, res) => {
   }
 };
 
+/**
+ * Sends a reset password token to the user's email address.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} - The response object with a success or error message.
+ * @throws {Error} - If there is an error generating the JWT auth token or sending the email.
+ */
 exports._forgotPassword = async function (req, res) {
   const { email } = req.body; // * Getting {{Email}} From {{Body}}
   console.log(email);
@@ -141,6 +164,12 @@ exports._forgotPassword = async function (req, res) {
   }
 };
 
+/**
+ * Resets the password for a user with the given reset password token.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} The response object with a success or error message.
+ */
 exports._resetPassword = async function (req, res) {
   const { resetPasswordToken } = req.params;
   const { password, confirmPassword } = req.body;
@@ -201,7 +230,15 @@ exports._resetPassword = async function (req, res) {
   }
 };
 
-// * LOGIN-REQUIRED, MUST SEND {{AUTH-TOKEN}} Through {{Headers}}
+/**
+  For-ADMIN
+ * Retrieves the details of the currently logged in user.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} - Returns a JSON object containing the user details if successful, 
+ * or an error message if unsuccessful.
+ * @throws {Error} - Throws an error if there is an issue retrieving the user details.
+ */
 exports._getUserDetails = async function (req, res) {
   try {
     // * Finding Document By {{Document-Id}}
@@ -215,7 +252,13 @@ exports._getUserDetails = async function (req, res) {
   }
 };
 
-// * LOGIN-REQUIRED, MUST SEND {{AUTH-TOKEN}} Through {{Headers}}
+/**
+ * Changes the password of the user associated with the request.
+ * @param {Object} req - Send Auth-Token For the verification
+ * @param {Object} res - The response object.
+ * @returns None
+ * @throws {Error} If there is an error while changing the password.
+ */
 exports._changePassword = async function (req, res) {
   const { oldPassword, password, confirmPassword } = req.body;
 
@@ -265,7 +308,13 @@ exports._changePassword = async function (req, res) {
   }
 };
 
-// * LOGIN-REQUIRED, Update User's Profile  
+/**
+ * Updates the user's profile with the given email, name, and role.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} - A JSON object containing the updated user's information.
+ * @throws {Object} - A JSON object containing an error message if the update fails.
+ */
 exports._updateProfile = async function (req, res) {
   try {
     const { email, name, role } = req.body;
@@ -286,13 +335,11 @@ exports._updateProfile = async function (req, res) {
       }
     );
     console.log(User);
-    return res
-      .status(200)
-      .json({
-        success: true,
-        message: "Updated Your Account Successfully  ",
-        User,
-      });
+    return res.status(200).json({
+      success: true,
+      message: "Updated Your Account Successfully  ",
+      User,
+    });
   } catch (error) {
     return res
       .status(500)
@@ -300,7 +347,14 @@ exports._updateProfile = async function (req, res) {
   }
 };
 
-// * ADMIN-ROUTE
+/**
+For-ADMIN
+ * Retrieves all user accounts from the database and returns them as a JSON object.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} - A JSON object containing all user accounts on the site.
+ * @throws {Object} - A JSON object indicating an internal server error if the operation fails.
+ */
 exports._getAllUsers = async function (req, res) {
   try {
     const Users = await UserModel.find({});
@@ -316,7 +370,14 @@ exports._getAllUsers = async function (req, res) {
   }
 };
 
-// * ADMIN-ROUTE
+/**
+  For-Admin
+ * Retrieves a single user from the database with the given ID.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} - Returns a JSON object containing the user information if successful, or an error message if not.
+ * @throws {Error} - Throws an error if there is an issue with the database connection.
+ */
 exports._getSingleUser = async function (req, res) {
   const { id } = req.params;
   try {
@@ -339,7 +400,14 @@ exports._getSingleUser = async function (req, res) {
       .json({ success: false, message: "Internal Server Error (500)" });
   }
 };
-// * ADMIN-ROUTE -Delete-User
+
+/**
+ * Deletes a single user from the database.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} - The response object containing the success status, message, and deleted user object.
+ * @throws {Object} - The response object containing the error status and message.
+ */
 exports._deleteSingleUser = async function (req, res) {
   const { id } = req.params;
   try {

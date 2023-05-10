@@ -32,55 +32,44 @@ userRouter.route("/login").post(_loginUser);
 
 // TODO: Make POST-Request & Provide {{Valid-email}} through "Body"
 // * Would Send The {{ Reset-Password-Token / Any-Random-String }} Through {{Nodemailer}} To The {{Provided-email}}
-userRouter.route("/forgotpassword").post(_forgotPassword);
+userRouter.route("/password-reset").post(_forgotPassword);
 
 // TODO: Make PUT-Request & Provide {{Valid-Reset-Password-Token}} through "Params" & {{Password, Confirm-Password}} through "Body"
 // * Would Find The Document Corresponding To {{Given-Email}} Then Update {{Password-Field}} Of That Document
-userRouter.route("/resetpassword/:resetPasswordToken").put(_resetPassword);
+userRouter.route("/password-reset/:resetPasswordToken").put(_resetPassword);
 
 /*
  * Routes For Authorized (Logged-In) Users
  */
-// TODO: Make GET-Request & Provide
-userRouter.route("/myself").get(checkUserAuthorization, _getUserDetails);
-
-// TODO: Make PUT-Request & Provide
-userRouter.route("/updateprofile").put(checkUserAuthorization, _updateProfile);
-
-// TODO: Make PUT-Request & Provide {{Auth-Token}} Through Headers
 userRouter
-  .route("/updatePassword")
-  .put(checkUserAuthorization, _changePassword);
- 
+  .route("/me/profile")
+  .get(checkUserAuthorization, _getUserDetails)
+  .put(checkUserAuthorization, _updateProfile);
+
+userRouter.route("/me/password").put(checkUserAuthorization, _changePassword);
 
 /*
  * Admin-Routes
  */
-//  TODO: Make GET-Request & Provide {{Auth-Token}} Of {role: "admin"} Through Headers
 userRouter
-  .route("/getAllUsers")
+  .route("/")
   .get(
     checkUserAuthorization,
     checkUserRoleAuthorization("admin"),
     _getAllUsers
   );
 
-//  TODO: Make GET-Request & Provide {{Auth-Token}} Of {role: "admin"} Through Headers
 userRouter
-  .route("/getSingleUser/:id")
+  .route("/:id")
   .get(
     checkUserAuthorization,
     checkUserRoleAuthorization("admin"),
     _getSingleUser
-  );
-//  TODO: Make GET-Request & Provide {{Auth-Token}} Of {role: "admin"} Through Headers
-userRouter
-  .route("/deleteSingleUser/:id")
+  )
   .delete(
     checkUserAuthorization,
     checkUserRoleAuthorization("admin"),
     _deleteSingleUser
   );
-
 
 module.exports = userRouter;

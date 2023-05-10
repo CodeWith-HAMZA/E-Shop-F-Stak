@@ -1,5 +1,11 @@
 const ProductModel = require("../Schemas/ProductModel");
 
+/**
+ * Retrieves all products from the database that match the given query parameters.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns Returns a JSON object containing the list products if successful, or an error message if not.
+ */
 exports._getAllProducts = async (req, res) => {
   let q = { ...req.query };
   const { name, gt, lt } = q;
@@ -57,6 +63,13 @@ exports._getAllProducts = async (req, res) => {
     });
   }
 };
+
+/**
+ * Retrieves the details of a single product from the database.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} - Returns a JSON object containing the product details if successful, or an error message if not.
+ */
 exports._getProductDetails = async (req, res) => {
   try {
     const product = await ProductModel.findById(req.params.id);
@@ -78,6 +91,13 @@ exports._getProductDetails = async (req, res) => {
   }
 };
 
+/**
+ * Creates a new product in the database using the request body.
+ * @param {Object} req - The request object containing the product information.
+ * @param {Object} res - The response object to send back to the client.
+ * @returns {Object} A JSON object containing the success status, the created product, and a message.
+ * @throws {Object} An error object containing information about the error that occurred.
+ */
 exports._createProduct = async (req, res) => {
   try {
     const CreatedProduct = await ProductModel.create(req.body);
@@ -97,6 +117,13 @@ exports._createProduct = async (req, res) => {
   }
 };
 
+/**
+ * Updates a product in the database with the given ID and request body.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} - A JSON object containing a success message and the updated product.
+ * @throws {Object} - A JSON object containing a failure message if the update fails.
+ */
 exports._updateProduct = async (req, res) => {
   try {
     // * Find One By Doc-Id And Update Itself
@@ -117,6 +144,13 @@ exports._updateProduct = async (req, res) => {
   }
 };
 
+/**
+ * Deletes a product from the database with the given ID.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} - A JSON object containing a success message and the deleted product, or an error message.
+ * @throws {Error} - If there is an error deleting the product from the database.
+ */
 exports._deleteProduct = async (req, res) => {
   try {
     const deletedProduct = await ProductModel.findByIdAndDelete(req.params.id);
@@ -134,6 +168,12 @@ exports._deleteProduct = async (req, res) => {
   }
 };
 
+/**
+ * Creates a new product review and saves it to the database.
+ * @param {Object} req - The request object containing the review information.
+ * @param {Object} res - The response object to send back to the client.
+ * @returns {Object} A JSON object containing a success message if the review was successfully posted, or an error message if there was an issue.
+ */
 exports._createProductReview = async (req, res) => {
   // * On Which Product The We're Gonna Review, that will define the {{productId}}
   const { rating, comment, productId } = req.body;
@@ -200,8 +240,13 @@ exports._createProductReview = async (req, res) => {
   }
 };
 
-
-
+/**
+ * Retrieves all reviews for a given product from the database.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} - Returns a JSON object containing the reviews for the given product.
+ * @throws {Object} - Returns a JSON object containing an error message if there is an error retrieving the reviews.
+ */
 exports._getProductReviews = async (req, res) => {
   const { productId } = req.params;
 
@@ -220,6 +265,14 @@ exports._getProductReviews = async (req, res) => {
     });
   }
 };
+
+/**
+ * Deletes a single review for a given product and returns all remaining reviews for that product.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} - Returns a JSON object with the remaining reviews for the product.
+ * @throws {Object} - Returns a 500 status code with an error message if there is an internal server error.
+ */
 exports._deleteSingleReview = async (req, res) => {
   const { productId } = req.params;
 

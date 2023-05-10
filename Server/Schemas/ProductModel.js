@@ -65,6 +65,7 @@ const productSchema = new mongoose.Schema(
       j: true,
       wtimeout: 1000,
     },
+    timestamps: true,
   }
 );
 
