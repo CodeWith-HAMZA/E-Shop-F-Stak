@@ -8,7 +8,17 @@ const ProductModel = require("../Schemas/ProductModel");
  */
 exports._getAllProducts = async (req, res) => {
   let q = { ...req.query };
-  const { name, gt, lt } = q;
+  const { name, gt, lt, minPrice, maxPrice, resultsPerPage, pageNumber } = q;
+
+  if (minPrice > maxPrice) {
+    return res.status(400).json({
+      success: false,
+      message:
+        "Invalid price range: minPrice must be less than or equal to maxPrice.  ",
+    });
+  }
+
+  // *- Building {{Mongoose-Query}}
   // * Filtering The Products By Using "Regular-Expressions" For The "Search-Keyword-Filteration"
   if (name) {
     q["name"] = new RegExp(name, "i");
@@ -16,18 +26,22 @@ exports._getAllProducts = async (req, res) => {
 
   // * Conditionally Appending Price-Filteration-Fields (Adding Multiple Fields To The Price Field)
   q["price"] = {
-    ...(gt && { $gt: gt }),
-    ...(lt && { $lt: lt }),
+    ...(minPrice && { $gte: minPrice }),
+    ...(maxPrice && { $lte: maxPrice }),
   };
 
-  const { resultsPerPage, pageNumber } = q;
+  // const { resultsPerPage, pageNumber } = q;
 
   // * Number Of Pages Skipped On Changing Page-Number With Respect To The Given-Results-Per-Page (Content-Limit)
   const SkippedProducts = resultsPerPage * (pageNumber - 1);
 
-  // * These Fields, Not That Important For The Query-Filteration
+  /**
+   * * An array of fields to be removed from a search query object.
+   * * If both 'gt' and 'lt' are not present, the 'price' field is removed.
+   * @type {string[]}
+   */
   const ToBeRemovedFields = [
-    !gt && !lt ? "price" : "",
+    !minPrice && !maxPrice ? "price" : "",
     "resultsPerPage",
     "pageNumber",
     "gt",
@@ -49,7 +63,7 @@ exports._getAllProducts = async (req, res) => {
             skip: Number.parseInt(SkippedProducts),
           }
         : {}
-    );
+    ).lean();
 
     const totalResults = products.length;
 
@@ -71,8 +85,9 @@ exports._getAllProducts = async (req, res) => {
  * @returns {Object} - Returns a JSON object containing the product details if successful, or an error message if not.
  */
 exports._getProductDetails = async (req, res) => {
+  const { id } = req.params;
   try {
-    const product = await ProductModel.findById(req.params.id);
+    const product = await ProductModel.findById(id);
     if (product) {
       return res.status(200).json({ success: true, product });
     } else {
@@ -135,7 +150,7 @@ exports._updateProduct = async (req, res) => {
 
     console.log("Update", req.params.id);
     return res
-      .status(500)
+      .status(200)
       .json({ success: true, message: "SUccessfully Updated", updatedProduct });
   } catch (error) {
     return res

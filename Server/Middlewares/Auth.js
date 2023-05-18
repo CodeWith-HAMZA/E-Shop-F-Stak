@@ -11,7 +11,7 @@ const jwt = require("jsonwebtoken");
  */
 exports.checkUserAuthorization = async (req, res, next) => {
   try {
-    // * User (Client) Must have {{Auth-JWT-Token}} To Proceed Further
+    // * User Client Must have {{Auth-JWT-Token}} To Proceed Further
     if (req.headers["token"]) {
       const token = req.headers["token"];
 
@@ -23,17 +23,15 @@ exports.checkUserAuthorization = async (req, res, next) => {
       // * Proceed Further move on...
       return next();
     } else {
-      return res
-        .status(401)
-        .json({
-          message:
-            "You Are Not Allowed To Access This Resource With Out Login, & Send Auth-Token Through Headers",
-        });
+      return res.status(401).json({
+        message:
+          "You Are Not Allowed To Access This Resource With Out Login, & Send Auth-Token Through Headers",
+      });
     }
   } catch (error) {
     // * Token is INVALID for the current User
     return res.status(500).json({
-      message: "Token Is Tempored or Manipulated From Client Side ;(",
+      message: "Token Is Tempered or Manipulated From Client Side ;(",
     });
   }
 };
@@ -48,11 +46,11 @@ exports.checkUserAuthorization = async (req, res, next) => {
 exports.checkUserRoleAuthorization = function (checkRequiredRole = "admin") {
   return (req, res, next) => {
     // ? Checking If The "User" Has The Exact Same Role (admin or a normal user)
-    if (req.user["role"] !== checkRequiredRole) {
+    if (req.user["role"] !== checkRequiredRole.toLowerCase()) {
       console.log("Admin role: " + req.user["role"]);
 
       return res.status(403).json({
-        message: `${req.user["role"]} role is not Allowed to access this Resource 403`,
+        message: `${req.user["role"]} role is not Allowed to Access this Resource 403`,
       });
     }
 

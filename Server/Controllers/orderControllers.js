@@ -60,7 +60,7 @@ exports._getOrdersForSpecificUser = async (req, res) => {
 // Login route
 exports._getOrderDetails = async (req, res) => {
   try {
-    const { orderId } = req.params;
+    const { id } = req.params;
     if (!mongoose.Types.ObjectId.isValid(orderId)) {
       return res
         .status(400)

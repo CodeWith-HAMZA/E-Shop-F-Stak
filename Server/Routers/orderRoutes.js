@@ -18,7 +18,7 @@ const orderRouter = require("express").Router();
  * @param {function} _createOrder - Controller function to create a new order.
  * @returns None
  */
-orderRouter.route("/order/new").post(checkUserAuthorization, _createOrder);
+orderRouter.route("/new").post(checkUserAuthorization, _createOrder);
 
 /**
  * Express route for getting orders for a specific user.
@@ -30,9 +30,7 @@ orderRouter.route("/order/new").post(checkUserAuthorization, _createOrder);
  * @param {function} _getOrdersForSpecificUser - Controller function to get orders for a specific user.
  * @returns None
  */
-orderRouter
-  .route("/orders")
-  .get(checkUserAuthorization, _getOrdersForSpecificUser);
+orderRouter.route("/").get(checkUserAuthorization, _getOrdersForSpecificUser);
 
 /**
  * Express route for getting the details of a specific order.
@@ -44,9 +42,7 @@ orderRouter
  * @param {function} _getOrderDetails - Controller function to retrieve the details of the order.
  * @returns None
  */
-orderRouter
-  .route("/order/:orderId")
-  .get(checkUserAuthorization, _getOrderDetails);
+orderRouter.route("/:id").get(checkUserAuthorization, _getOrderDetails);
 
 // * Admin
 /**
@@ -60,9 +56,8 @@ orderRouter
  * @returns None
  */
 
-
 orderRouter
-  .route("/allOrders")
+  .route("/admin")
   .get(
     checkUserAuthorization,
     checkUserRoleAuthorization("admin"),

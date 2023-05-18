@@ -20,7 +20,7 @@ const {
  * @param {Object} res - The Express response object.
  * @returns None
  */
-productRouter.route("/products").get(_getAllProducts);
+productRouter.route("/").get(_getAllProducts);
 
 /**
  * Defines a route for creating a new product and maps it to the _createProduct function.
@@ -31,7 +31,7 @@ productRouter.route("/products").get(_getAllProducts);
  * @returns None
  */
 productRouter
-  .route("/products/new")
+  .route("/new")
   .post(
     checkUserAuthorization,
     checkUserRoleAuthorization("admin"),
@@ -47,7 +47,7 @@ productRouter
  * @returns None
  */
 productRouter
-  .route("/products/:id")
+  .route("/:id")
   .get(_getProductDetails)
   .put(
     checkUserAuthorization,
@@ -68,7 +68,7 @@ productRouter
  * @returns None
  */
 productRouter
-  .route("/products/:id/reviews/new")
+  .route("/:id/reviews/new")
   .patch(checkUserAuthorization, _createProductReview);
 
 /**

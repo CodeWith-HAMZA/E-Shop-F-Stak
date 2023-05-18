@@ -1,10 +1,13 @@
+const http = require("http");
 const app = require("./app");
 const ConnectDB = require("./Configs/ConnectDB");
 const port = 3000;
-const hostname = 'loaclhost';
+const hostname = "loaclhost";
+
+// * Creating Server And Password app module as callback
+const server = http.createServer(app);
 
 // * Connect To DB
-
 ConnectDB()
   .then((success) => console.log(`Successfully Connected To DB ${success}`))
   .catch((err) =>
@@ -12,6 +15,6 @@ ConnectDB()
   );
 
 // * Server Is Listening On 3000
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server started on http://${hostname}:${port}`);
 });
