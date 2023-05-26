@@ -1,8 +1,9 @@
-import Products from "@/components/server/Products";
 import React from "react";
+import Products from "./Products";
 
-const page = () => {
-  return <Products productCategory="";
+const page = async () => {
+  // fetch("", { cache: "no-cache" });
+  return await (<Products productCategory="all" />);
 };
 
 export default page;

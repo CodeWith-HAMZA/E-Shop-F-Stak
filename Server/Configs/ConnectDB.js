@@ -2,7 +2,7 @@ const { default: mongoose } = require("mongoose");
 
 module.exports = async () => {
   try {
-    await mongoose.connect(
+    mongoose.connect(
       "mongodb+srv://HamzaJavedShaikh:12@cluster0.blo8xq3.mongodb.net/MAJORECOMRCEPROJECT",
       { useNewUrlParser: true, useUnifiedTopology: true }
     );

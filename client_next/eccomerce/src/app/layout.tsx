@@ -1,4 +1,5 @@
-import Header from "@/components/server/layout/Header";
+// import Header from "@/components/Private/Admin/client/AdminHeader";
+import Header from "@/app/Header";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import Head from "next/head";
@@ -21,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link
+        {/* <link
           href="https://cdn.jsdelivr.net/npm/daisyui@2.51.6/dist/full.css"
           rel="stylesheet"
           type="text/css"
@@ -30,13 +31,15 @@ export default function RootLayout({
           href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2/dist/tailwind.min.css"
           rel="stylesheet"
           type="text/css"
-        />
+        /> */}
       </head>
 
       <body>
         <StoreProvider>
           {/* <Provider> */}
+          {/* <Header /> */}
           <Header />
+
           {children}
           {/* </Provider> */}
         </StoreProvider>

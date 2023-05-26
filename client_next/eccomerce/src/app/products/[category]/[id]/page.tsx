@@ -1,4 +1,4 @@
-import ProductDetails from "@/components/client/ProductDetails";
+import ProductDetails from "@/components/public/client/ProductDetails";
 import React, { Fragment, useState } from "react";
 interface Props {
   params: { id: string };

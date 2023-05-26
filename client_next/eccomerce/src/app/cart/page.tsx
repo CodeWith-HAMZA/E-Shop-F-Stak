@@ -1,4 +1,4 @@
-import ShoppingCart from "@/components/client/ShoppingCart";
+import ShoppingCart from "@/components/public/client/ShoppingCart";
 import React, { Fragment } from "react";
 
 const page = () => {

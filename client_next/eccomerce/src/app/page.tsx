@@ -1,30 +1,16 @@
-"use client";
-import Image from "next/image";
-import { Fragment } from "react";
-import {
-  useGetProductDetailsByIdQuery,
-  useGetProductsQuery,
-} from "./reduxToolkit/services/products";
+import React, { Fragment, useEffect } from "react";
+
 import { FetchArgs } from "@reduxjs/toolkit/dist/query";
+import { store } from "./reduxToolkit/store";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProducts } from "./reduxToolkit/features/product/productSlice";
+import Link from "next/link";
+import HeroSection from "./HeroSection";
 
 export default function Home() {
-  const query = useGetProductsQuery();
-  const { data } = useGetProductDetailsByIdQuery("2");
-  console.log(query.isLoading, query.isFetching);
-  // if (query.isFetching) {
-  //   return "FETACHING";
-  // }
-  // if (query.isLoading) {
-  //   return "Loading...";
-  // }
-
   return (
-    <Fragment>
-      Hero Section
-      {data?.title}
-      {/* {query.data?.map((elem) => (
-        <h1>{elem.title}</h1>
-      ))} */}
-    </Fragment>
+    <>
+      <HeroSection />
+    </>
   );
 }

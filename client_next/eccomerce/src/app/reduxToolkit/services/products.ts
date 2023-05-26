@@ -6,15 +6,31 @@ import {
   fetchBaseQuery,
 } from "@reduxjs/toolkit/query/react";
 
-import { Product } from "@/types/Product";
+import { Product, ProductQueryFilters } from "@/types/Product";
 
 // Define a service using a base URL and expected endpoints
 export const productsApi = createApi({
   reducerPath: "productsApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "https://fakestoreapi.com" }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: "http://localhost:5500/api/v1",
+    headers: {
+      category: "",
+    },
+  }),
+
   endpoints: (builder) => ({
-    getProducts: builder.query<Product[], void>({
-      query: (args: void) => `/products`,
+    getProducts: builder.query<
+      { products: Product[]; success: boolean; totalResults: number },
+      ProductQueryFilters
+    >({
+      query: (queryParams) => ({
+        url: `/products`,
+        // method: "GET",
+        // params: <ProductQueryFilters>{ ...queryParams },
+        headers: {
+          // headers
+        },
+      }),
     }),
     getProductDetailsById: builder.query<Product, string>({
       query: (productId) => {

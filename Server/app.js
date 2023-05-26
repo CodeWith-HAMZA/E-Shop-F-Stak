@@ -15,6 +15,6 @@ app.use(express.json()); // for Parsing-JSON
 // * All-Routes
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/products", productRouter);
-app.use("/api/orders", orderRouter);
+app.use("/api/v1/orders", orderRouter);
 
 module.exports = app;

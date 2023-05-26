@@ -98,7 +98,6 @@ exports._getProductDetails = async (req, res) => {
       });
     }
   } catch (error) {
-    console.log(product);
     return res.status(500).json({
       success: false,
       message: "ERROR WHILE FETCHING A SINGLE PRODUCT DETAILS",

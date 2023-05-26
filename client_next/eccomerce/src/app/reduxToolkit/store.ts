@@ -5,14 +5,19 @@ import { productsApi } from "./services/products";
 import cartSlice from "./features/cart/cartSlice";
 
 import { setupListeners } from "@reduxjs/toolkit/dist/query";
-export const store = configureStore({
-  reducer: {
-    [productsApi["reducerPath"]]: productsApi.reducer,
-    shoppingCart: cartSlice,
-  },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(productsApi.middleware),
-});
+import productSlice from "./features/product/productSlice";
+function makeStore() {
+  return configureStore({
+    reducer: {
+      shoppingCart: cartSlice,
+      products: productSlice,
+      [productsApi["reducerPath"]]: productsApi.reducer,
+    },
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(productsApi.middleware),
+  });
+}
+export const store = makeStore();
 
 // Setup listeners for automatic refetching and cache invalidation
 setupListeners(store.dispatch);
