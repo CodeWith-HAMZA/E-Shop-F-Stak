@@ -1,5 +1,7 @@
+"use client";
 import Link from "next/link";
 import React from "react";
+import Register from "./Register";
 
 const page = () => {
   return (
@@ -10,6 +12,7 @@ const page = () => {
             <h2 className="text-3xl font-bold leading-tight text-black sm:text-4xl">
               Sign up to My Shop
             </h2>
+            <Register />
             <p className="mt-2 text-base text-gray-600">
               Already have an account?{" "}
               <Link

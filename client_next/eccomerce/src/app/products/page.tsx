@@ -1,9 +1,12 @@
-import React from "react";
+import ProductFilterPanel from "./ProductFilterPanel";
 import Products from "./Products";
 
 const page = async () => {
-  // fetch("", { cache: "no-cache" });
-  return await (<Products productCategory="all" />);
+  return (
+    <Products productsCategory="all">
+      <ProductFilterPanel />
+    </Products>
+  );
 };
 
 export default page;

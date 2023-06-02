@@ -8,7 +8,7 @@ const ProductModel = require("../Schemas/ProductModel");
  */
 exports._getAllProducts = async (req, res) => {
   let q = { ...req.query };
-  const { name, gt, lt, minPrice, maxPrice, resultsPerPage, pageNumber } = q;
+  const { name, minPrice, maxPrice, resultsPerPage, pageNumber } = q;
 
   if (minPrice > maxPrice) {
     return res.status(400).json({

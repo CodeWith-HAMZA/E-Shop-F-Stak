@@ -10,6 +10,7 @@ import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import dynamic from "next/dynamic";
 import React, { Fragment } from "react";
 import Products from "../Products";
+import ProductFilterPanel from "../ProductFilterPanel";
 interface Props {
   params: { category: string };
 }
@@ -22,14 +23,11 @@ const page = ({ params }: Props) => {
   // const Products = dynamic(() => import("@/components/server/Products"), {
   //   ssr: true,
   // });
-  console.log();
+  console.log(category);
   return (
-    <Fragment>
-      <Products
-        // products={data?.products}
-        productCategory={category as string}
-      />
-    </Fragment>
+    <Products productsCategory={category}>
+      <ProductFilterPanel />
+    </Products>
   );
 };
 

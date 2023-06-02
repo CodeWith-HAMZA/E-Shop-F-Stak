@@ -2,10 +2,6 @@
 import Header from "@/app/Header";
 import "./globals.css";
 import { Inter } from "next/font/google";
-import Head from "next/head";
-import StoreProvider from "./reduxToolkit/StoreProvider";
-import { ApiProvider } from "@reduxjs/toolkit/dist/query/react";
-import Provider from "./reduxToolkit/services/Provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,28 +17,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <head>
-        {/* <link
-          href="https://cdn.jsdelivr.net/npm/daisyui@2.51.6/dist/full.css"
-          rel="stylesheet"
-          type="text/css"
-        />
-        <link
-          href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2/dist/tailwind.min.css"
-          rel="stylesheet"
-          type="text/css"
-        /> */}
-      </head>
+      <head></head>
 
       <body>
-        <StoreProvider>
-          {/* <Provider> */}
-          {/* <Header /> */}
-          <Header />
+        {/* <Provider> */}
+        {/* <Header /> */}
+        <Header />
 
-          {children}
-          {/* </Provider> */}
-        </StoreProvider>
+        {children}
+        {/* </Provider> */}
       </body>
     </html>
   );

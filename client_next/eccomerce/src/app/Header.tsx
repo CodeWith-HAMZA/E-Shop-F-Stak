@@ -56,15 +56,6 @@ function Header() {
         scrollDirection === "up" ? "fixed" : "absolute"
       }  flex  md:block w-full bg- text-gray-600 bg-white body-font shadow-md`}
     >
-      <DropdownMenu
-        MenuLinks={[{ name: "My Profile", path: "/my-profile" }]}
-        width="w-screen"
-        icon={<HiMenuAlt3 className="h-6 w-6 mx-4" />}
-        // name="Store"
-        menuContainerClasses="md:hidden"
-        menuListClasses="left-0"
-      />
-
       <div className=" container mx-auto flex p-5 md:flex-row items-center justify-between gap-2">
         <Link
           href={"/"}
@@ -92,7 +83,7 @@ function Header() {
                 path: "/products",
                 name: "All Products",
               },
-              { path: "/products/Electronics", name: "Electronics" },
+              { path: "/products/men's clothing", name: "men's clothing" },
             ]}
             width="w-screen"
             // icon={<BiUserCircle className="h-5 w-5" />}
