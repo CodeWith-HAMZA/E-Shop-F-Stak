@@ -1,5 +1,6 @@
 import ProductFilterPanel from "./ProductFilterPanel";
 import Products from "./Products";
+import ProductsContainer from "./ProductsContainer";
 
 const page = async () => {
   return (

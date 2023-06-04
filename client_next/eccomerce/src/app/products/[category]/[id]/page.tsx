@@ -3,12 +3,15 @@ import React, { Fragment, useState } from "react";
 interface Props {
   params: { id: string };
 }
-const page = ({ params }: Props) => {
+const page = async ({ params }: Props) => {
   const { id } = params;
+  const res = await fetch(`http://localhost:5500/api/v1/products/${id}`);
+  const { product } = await res.json();
+  console.log(product);
 
   return (
     <Fragment>
-      <ProductDetails />
+      <ProductDetails product={product} />
     </Fragment>
   );
 };

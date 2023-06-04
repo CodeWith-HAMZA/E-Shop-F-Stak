@@ -1,8 +1,4 @@
-"use client";
-import ProductCard from "@/components/public/server/ProductCard";
-import { Product } from "@/types/Product";
-import { Fragment, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import ProductsGrid from "./ProductsGrid";
 
 interface Props {
   readonly productsCategory: string;
@@ -15,41 +11,42 @@ function capitalize(str: string): string {
 
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
+function parseSpaces(str: string) {
+  var replacedString = str.replace(/%20/g, " ");
+  return replacedString;
+}
 
-// const fetchProducts = async (productsCategory: string) => {
-//   // if (typeof productsCategory === "string") return;
-//   const fetchByCategory: boolean = productsCategory.toLowerCase() !== "all";
+const fetchProducts = async (productsCategory: string) => {
+  // if (typeof productsCategory === "string") return;
+  const fetchByCategory: boolean = productsCategory.toLowerCase() !== "all";
 
-//   const res = await fetch(
-//     `http://localhost:5500/api/v1/products/${
-//       fetchByCategory ? `?category=${productsCategory}` : ""
-//     }`,
-//     {
-//       method: "GET",
-//     }
-//   );
-//   const data = await res.json();
-//   console.log("wah reh wah", data);
+  const res = await fetch(
+    `http://localhost:5500/api/v1/products/${
+      fetchByCategory ? `?category=${productsCategory}` : ""
+    }`,
+    {
+      method: "GET",
+    }
+  );
+  const data = await res.json();
+  console.log("wah reh wah", data);
 
-//   return data;
-// };
+  return data;
+};
 
 const Products = async ({
   productsCategory,
   children,
 }: Props): Promise<JSX.Element> => {
   // const { products } = await fetchProducts(productsCategory);
-  useEffect(() => {
-    const fetchByCategory: boolean = productsCategory.toLowerCase() !== "all";
-    // dispatch(setProducts({ wah: "harami" }) as any);
-  }, []);
+  const products = await fetchProducts(productsCategory);
 
   return (
     <section className="pt-10">
       <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
         <header>
           <h2 className="text-xl font-bold text-gray-900 sm:text-3xl">
-            {capitalize(productsCategory)} Collection
+            {capitalize(parseSpaces(productsCategory))} Collection
           </h2>
 
           <p className="mt-4 max-w-md text-gray-500">
@@ -81,15 +78,7 @@ const Products = async ({
         </div>
         <div className="mt-4 lg:mt-8 lg:grid lg:grid-cols-4 lg:items-start lg:gap-8">
           {children}
-          <div className="lg:col-span-3  ">
-            <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 p-1 sm:bg-gray-red-300 w-full">
-              {[].map((product: Product, idx: number) => (
-                <Fragment key={idx}>
-                  <ProductCard {...product} />
-                </Fragment>
-              ))}
-            </ul>
-          </div>
+          <ProductsGrid products={products?.products} />
         </div>
       </div>
     </section>

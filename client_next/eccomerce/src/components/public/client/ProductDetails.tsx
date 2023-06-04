@@ -1,16 +1,30 @@
 "use client";
+import { useCartStore } from "@/app/store/cartStore";
+import { Product } from "@/types/Product";
 import React, { Fragment } from "react";
 
-const ProductDetails = () => {
+interface Props {
+  product: Product;
+}
+const ProductDetails = ({ product }: Props) => {
   const [Qty, setQty] = React.useState(0);
+  const addItemToCart = useCartStore((state) => state.addItemToCart);
+  const cartItems = useCartStore((state) => state.cartItems);
+
+  const { name, category, price, description, images } = product;
+  function handleAddToCart(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    e.preventDefault();
+    addItemToCart({ ...product, quantity: Qty });
+    console.log(cartItems);
+  }
   return (
     <Fragment>
-      <div className="relative mx-auto max-w-screen-xl px-4 py-8">
+      <section className="relative mx-auto max-w-screen-xl px-4 py-32">
         <div className="grid grid-cols-1 items-start gap-8 md:grid-cols-2">
           <div className="grid grid-cols-2 gap-4 md:grid-cols-1">
             <img
               alt="Les Paul"
-              src={"https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg"}
+              src={images[0].url}
               className="aspect-square w-full rounded-xl object-cover"
             />
 
@@ -32,13 +46,9 @@ const ProductDetails = () => {
 
             <div className="mt-8 flex justify-between">
               <div className="max-w-[35ch] space-y-2">
-                <h1 className="text-xl font-bold sm:text-2xl">
-                  {"selectedProduct?.name"}
-                </h1>
+                <h1 className="text-xl font-bold sm:text-2xl">{name}</h1>
 
-                <p className="text-sm">
-                  Category: ({"selectedProduct?.category"})
-                </p>
+                <p className="text-sm">Category: ({category})</p>
 
                 {/* <div className="-ms-0.5 flex">
                 <svg
@@ -88,14 +98,12 @@ const ProductDetails = () => {
               </div> */}
               </div>
 
-              <p className="text-lg font-bold">
-                Rs: {"selectedProduct?.price"}
-              </p>
+              <p className="text-lg font-bold">Rs: {price}</p>
             </div>
 
             <div className="mt-4">
               <div className="prose max-w-none">
-                <p>{"selectedProduct?.description"}</p>
+                <p>{description}</p>
               </div>
 
               {/* <button className="mt-2 text-sm font-medium underline">
@@ -241,14 +249,15 @@ const ProductDetails = () => {
                   type="submit"
                   className="block rounded bg-indigo-600 px-5 py-3 text-xs font-medium text-white hover:bg-indigo-500"
                   // onClick={() => Qty > 0 && gotoCheckOut()}
+                  onClick={handleAddToCart}
                 >
-                  Buy Now
+                  Add To Cart
                 </button>
               </div>
             </form>
           </div>
         </div>
-      </div>
+      </section>
     </Fragment>
   );
 };

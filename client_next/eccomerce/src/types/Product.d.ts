@@ -28,7 +28,7 @@ export interface Product {
   updatedAt?: string;
 }
 
-interface ProductQueryFilters {
+export interface ProductQueryFilters {
   readonly name?: string;
   readonly category?: string;
   readonly minPrice?: number;
