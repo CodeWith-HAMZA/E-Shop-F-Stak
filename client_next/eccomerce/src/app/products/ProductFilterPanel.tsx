@@ -1,10 +1,22 @@
 "use client";
 
+import { useForm } from "react-hook-form";
+
 const ProductFilterPanel = () => {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
+
+  function onSubmit(data: unknown) {
+    // call async action
+    console.log(data);
+  }
   return (
-    <div className={`space-y-4 block `}>
+    <form className={`space-y-4 block `} onSubmit={handleSubmit(onSubmit)}>
       <div>
-        <button onClick={() => {}}>Hamza</button>
         <label
           htmlFor="SortBy"
           className="block text-xs font-medium text-gray-700"
@@ -13,13 +25,11 @@ const ProductFilterPanel = () => {
         </label>
 
         <select
+          {...register("orderByPrice")}
           id="SortBy"
-          onChange={() => {}}
           className="mt-1 rounded border-gray-300 text-sm"
         >
-          <option>Sort By</option>
-          <option value="Title, DESC">Title, DESC</option>
-          <option value="Title, ASC">Title, ASC</option>
+          <option value={""}>Sort By</option>
           <option value="Price, DESC">Price, DESC</option>
           <option value="Price, ASC">Price, ASC</option>
         </select>
@@ -28,7 +38,7 @@ const ProductFilterPanel = () => {
         <p className="block text-xs font-medium text-gray-700">Filters</p>
 
         <div className="mt-1 space-y-2">
-          <details className="overflow-hidden rounded border border-gray-300 [&_summary::-webkit-details-marker]:hidden">
+          {/* <details className="overflow-hidden rounded border border-gray-300 [&_summary::-webkit-details-marker]:hidden">
             <summary className="flex cursor-pointer items-center justify-between gap-2 p-4 text-gray-900 transition">
               <span className="text-sm font-medium"> Availability </span>
 
@@ -115,7 +125,7 @@ const ProductFilterPanel = () => {
                 </li>
               </ul>
             </div>
-          </details>
+          </details> */}
 
           <details className="overflow-hidden rounded border border-gray-300 [&_summary::-webkit-details-marker]:hidden">
             <summary className="flex cursor-pointer items-center justify-between gap-2 p-4 text-gray-900 transition">
@@ -141,9 +151,9 @@ const ProductFilterPanel = () => {
 
             <div className="border-t border-gray-200 bg-white">
               <header className="flex items-center justify-between p-4">
-                <span className="text-sm text-gray-700">
+                {/* <span className="text-sm text-gray-700">
                   The highest price is $600
-                </span>
+                </span> */}
 
                 <button
                   type="button"
@@ -164,6 +174,7 @@ const ProductFilterPanel = () => {
                     <input
                       type="number"
                       id="FilterPriceFrom"
+                      {...register("minPrice")}
                       placeholder="From"
                       className="w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
                     />
@@ -178,6 +189,7 @@ const ProductFilterPanel = () => {
                     <input
                       type="number"
                       id="FilterPriceTo"
+                      {...register("maxPrice")}
                       placeholder="To"
                       className="w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
                     />
@@ -189,7 +201,7 @@ const ProductFilterPanel = () => {
 
           <details className="overflow-hidden rounded border border-gray-300 [&_summary::-webkit-details-marker]:hidden">
             <summary className="flex cursor-pointer items-center justify-between gap-2 p-4 text-gray-900 transition">
-              <span className="text-sm font-medium"> Colors </span>
+              <span className="text-sm font-medium"> Product Categories </span>
 
               <span className="transition group-open:-rotate-180">
                 <svg
@@ -328,7 +340,13 @@ const ProductFilterPanel = () => {
           </details>
         </div>
       </div>
-    </div>
+      <button
+        type="submit"
+        className="bg-violet-600 text-white py-2 px-4 hover:bg-violet-700 transition-all hover:shadow-md rounded-md "
+      >
+        Apply Filters
+      </button>
+    </form>
   );
 };
 
