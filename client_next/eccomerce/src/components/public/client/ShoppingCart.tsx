@@ -1,5 +1,6 @@
 "use client";
 import { useCartStore } from "@/app/store/cartStore";
+import Link from "next/link";
 import React, { Fragment } from "react";
 
 const ShoppingCart: React.FC = () => {
@@ -35,7 +36,8 @@ const ShoppingCart: React.FC = () => {
         <h1 className="mb-10 text-center text-2xl font-bold">Cart Items</h1>
         <div className="mx-auto max-w-5xl justify-center px-6 md:flex md:space-x-6 xl:px-0">
           <div className="rounded-lg md:w-2/3">
-            {cartItems.map((item, idx) => (
+ 
+            {cartItems.length ? cartItems.map((item, idx) => (
               <div
                 key={idx}
                 className="justify-between mb-6 rounded-lg bg-white p-6 shadow-md sm:flex sm:justify-start"
@@ -93,7 +95,7 @@ const ShoppingCart: React.FC = () => {
                   </div>
                 </div>
               </div>
-            ))}
+            )): <>Bucket is Empty Now! <Link href={'/'} className="text-purple-600 hover:text-purple-500">Shop And Fill</Link></>}
           </div>
           <div className="mt-6 h-full rounded-lg border bg-white p-6 shadow-md md:mt-0 md:w-1/3">
             <div className="mb-2 flex justify-between">
@@ -114,9 +116,9 @@ const ShoppingCart: React.FC = () => {
                 <p className="text-sm text-gray-700">including VAT</p>
               </div>
             </div>
-            <button className="mt-6 w-full rounded-md bg-purple-500 py-1.5 font-medium text-purple-50 hover:bg-purple-600">
+            <Link   href="/checkout" className="mt-6 w-full rounded-md bg-purple-500 py-1.5 font-medium text-purple-50 hover:bg-purple-600">
               Check out
-            </button>
+            </Link>
           </div>
         </div>
       </div>
