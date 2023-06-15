@@ -1,3 +1,4 @@
+const stripe = require("stripe");
 const { default: mongoose } = require("mongoose");
 const OrderModel = require("../Schemas/OrderModel");
 const ProductModel = require("../Schemas/ProductModel");
@@ -213,3 +214,74 @@ async function updateStock(productId, productQuantity) {
   product.stock -= productQuantity;
   await product.save({ validateAfterSave: false });
 }
+
+
+
+// * Check out with stripe payment gateway
+exports._checkout = async (req, res) => {
+  const {success_url, cancel_url, orderItems} = req.body
+  try {
+    const paymentIntent = await  stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price_data: {
+            currency: "pkr",
+            product_data: {
+              name: 'Tshirt XL/LG Gym', // Replace with the name of your product
+              // Other product details if necessary
+            },
+            unit_amount: 3499999,
+          },
+          quantity: 3,
+        },
+       
+      ],
+      mode: 'payment',
+      success_url: 'https://www.google.com/', // Replace with your success URL
+      cancel_url: 'https://www.facebook/', // Replace with your cancel URL
+    })
+      console.log("first")
+    // Handle successful payment
+    res.status(200).json({ success: true, data: req.body, url:paymentIntent.url   });
+  } catch (error) {
+    // Handle payment error
+    res.status(500).json({ error });
+  }
+
+}
+
+
+// app.post('/charge', async (req, res) => {  
+//   try {
+//     const paymentIntent = await  stripe.checkout.sessions.create({
+//       payment_method_types: ['card'],
+//       line_items: [
+//         {
+//           price_data: {
+//             currency: "pkr",
+//             product_data: {
+//               name: 'Tshirt XL/LG Gym', // Replace with the name of your product
+//               // Other product details if necessary
+//             },
+//             unit_amount: 24*100,
+//           },
+//           quantity: 3,
+//         },
+       
+//       ],
+//       mode: 'payment',
+//       success_url: 'https://www.google.com/', // Replace with your success URL
+//       cancel_url: 'https://www.facebook/', // Replace with your cancel URL
+//     })
+//       console.log("first")
+//     // Handle successful payment
+//     res.status(200).json({ success: true, data: req.body, url:paymentIntent.url   });
+//   } catch (error) {
+//     // Handle payment error
+//     res.status(500).json({ error: error });
+//   }
+// });
+
+
+

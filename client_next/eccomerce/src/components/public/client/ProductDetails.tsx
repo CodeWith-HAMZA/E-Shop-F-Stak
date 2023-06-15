@@ -1,6 +1,7 @@
 "use client";
 import { useCartStore } from "@/app/store/cartStore";
 import { Product } from "@/types/Product";
+import { showToast } from "@/utilities/showToastNotification";
 import React, { Fragment } from "react";
 
 interface Props {
@@ -249,7 +250,10 @@ const ProductDetails = ({ product }: Props) => {
                   type="submit"
                   className="block rounded bg-indigo-600 px-5 py-3 text-xs font-medium text-white hover:bg-indigo-500"
                   // onClick={() => Qty > 0 && gotoCheckOut()}
-                  onClick={handleAddToCart}
+                  onClick={(e) =>{
+                      console.log("first, added") 
+                      
+                    handleAddToCart(e)}}
                 >
                   Add To Cart
                 </button>

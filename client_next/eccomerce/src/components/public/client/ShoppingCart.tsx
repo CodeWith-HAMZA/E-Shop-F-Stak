@@ -54,7 +54,7 @@ const ShoppingCart: React.FC = () => {
                     </h2>
                     <p className="mt-1 text-xs text-gray-700">
                       {item.description}
-                    </p>
+                    </p>  
                   </div>
                   <div className="mt-4 flex justify-between sm:space-y-6 sm:mt-0 sm:block sm:space-x-6">
                     <div className="flex items-center border-gray-100">

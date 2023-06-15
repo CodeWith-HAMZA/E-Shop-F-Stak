@@ -3,6 +3,7 @@ const {
   _getAllOrders,
   _createOrder,
   _getOrderDetails,
+  _checkout,
 } = require("../Controllers/orderControllers");
 const {
   checkUserAuthorization,
@@ -64,4 +65,7 @@ orderRouter
     _getAllOrders
   );
 
+
+  // * Gotta work on soon
+  orderRouter.route('/checkout').post(_checkout);
 module.exports = orderRouter;

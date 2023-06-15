@@ -7,6 +7,7 @@ import DropdownMenu from "../components/public/client/layout/DropdownMenu";
 import { BiUserCircle } from "react-icons/bi";
 import { HiMenuAlt3 } from "react-icons/hi";
 import { useState } from "react";
+import { showToast } from "@/utilities/showToastNotification";
 interface Link {
   path: string;
   content: string | JSX.Element;
@@ -29,7 +30,7 @@ function Header() {
 
   React.useEffect(() => {
     // * {{dispatching}} {{Fetching All Products With No Filters}} Through Action-Creator (Thunk)
-
+     
     const handleScroll = () => {
       const currentScrollPos = window.pageYOffset;
 
