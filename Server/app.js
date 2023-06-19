@@ -22,32 +22,34 @@ app.get("/h", (req, res) => {
 
 
 
-app.post('/pay', async (req, res) => {  
-  try { 
-    console.log("first")
-    const paymentIntent = await S.checkout.sessions.create({
+app.post('/charge', async (req, res) => {  
+  const {orderItems} = req.body
+  console.log(
+    
+
+    
+  )
+  try {
+    const paymentIntent = await  stripe.checkout.sessions.create({
       payment_method_types: ['card'],
-      line_items: [
-        {
-          price_data: {
-            currency: "pkr",
-            product_data: {
-              name: 'Tshirt XL/LG Gym', // Replace with the name of your product
-              // Other product details if necessary
-            },
-            unit_amount: 3499999,
+      line_items: orderItems.map((item) => ({
+        price_data: {
+          currency: "usd",
+          product_data: {
+            name: item.name,  
           },
-          quantity: 3,
+          unit_amount:  item.price * 100,  
         },
-       
-      ],
+        quantity: item.quantity,
+      })),
+      
       mode: 'payment',
-      success_url:"https://www.google.com/", // Replace with your success URL
-      cancel_url: "https://www.google.com/", // Replace with your cancel URL
+      success_url: 'http://localhost:3000/checkout/payment-success/', // Replace with your success URL
+      cancel_url: 'http://localhost:3000/checkout/payment-cancel/', // Replace with your cancel URL
     })
-      console.log("first")
+    
     // Handle successful payment
-    res.status(200).json({ success: true , url:paymentIntent.url   });
+    res.status(200).json({ success: true,   url:paymentIntent.url   });
   } catch (error) {
     // Handle payment error
     res.status(500).json({ error });

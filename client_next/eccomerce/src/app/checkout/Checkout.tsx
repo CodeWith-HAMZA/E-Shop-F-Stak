@@ -5,6 +5,7 @@ import { CartItem, useCartStore } from "../store/cartStore";
 import { countries } from "@/utilities/countriesArray";
 import axios from "axios";
 import api from "@/services/api";
+import { BiColor } from "react-icons/bi";
 
 const Checkout = () => {
 const {cartItems, subTotal}= useCartStore((state) => state); 
@@ -39,10 +40,7 @@ const {
 
          } catch (error) {
             console.log("error", error)
-        }
-        
-        
-
+        } 
 
     }
     console.log(data,    formState,  'euth');
@@ -170,3 +168,9 @@ const {
 }
 
 export default Checkout;
+
+
+// .Card.elementor-widget-container {
+//     background: #7a00ff;
+// color: white;
+// }
