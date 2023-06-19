@@ -1,10 +1,15 @@
+'use client'
 import Link from "next/link";
-import React from "react";
+import React from "react"; 
+import toast, { Toaster } from 'react-hot-toast';
 
 const HeroSection = () => {
+  const notify = () => toast.success('uu');
+
   return (
     <>
       <React.Fragment>
+
         <div className="relative flex flex-col-reverse py-16 lg:pt-0 lg:flex-col lg:pb-0">
           <div className="inset-y-0 top-0 right-0 z-0 w-full max-w-xl px-4 mx-auto md:px-0 lg:pr-0 lg:mb-0 lg:mx-0 lg:w-7/12 lg:max-w-full lg:absolute xl:px-0">
             <svg
@@ -15,6 +20,9 @@ const HeroSection = () => {
             >
               <path d="M50 0H100L50 100H0L50 0Z"></path>
             </svg>
+      <div>
+      
+    </div>
             <img
               className="object-cover w-full h-56 rounded shadow-lg lg:rounded-none lg:shadow-none md:h-96 lg:h-full"
               src="https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=2&amp;h=750&amp;w=1260"
@@ -24,6 +32,8 @@ const HeroSection = () => {
           <div className="relative flex flex-col items-start w-full max-w-xl px-4 mx-auto md:px-0 lg:px-8 lg:max-w-screen-xl">
             <div className="mb-16 lg:my-40 lg:max-w-lg lg:pr-5">
               <p className="inline-block px-3 py-px mb-4 text-xs font-semibold tracking-wider text-teal-900 uppercase rounded-full bg-teal-accent-400">
+     
+      <button onClick={notify}>Make me a toast</button>
                 Brand new
               </p>
               <h2 className="mb-5 font-sans text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl sm:leading-none">

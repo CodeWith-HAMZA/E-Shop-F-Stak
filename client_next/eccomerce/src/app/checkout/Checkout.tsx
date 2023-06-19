@@ -3,9 +3,7 @@
 import { useForm, useFormState } from "react-hook-form";
 import { CartItem, useCartStore } from "../store/cartStore";
 import { countries } from "@/utilities/countriesArray";
-import axios from "axios";
-import api from "@/services/api";
-import { BiColor } from "react-icons/bi";
+import axios from "axios"; 
 
 const Checkout = () => {
 const {cartItems, subTotal}= useCartStore((state) => state); 
@@ -17,26 +15,15 @@ const {
   } = useForm();
   async function onSubmit(data: unknown) {
     if(Number(subTotal)){
-        console.log(cartItems)
-        console.log( cartItems.map((item) =>({
-            price_data: {
-              currency: "usd",
-              product_data: {
-                name: item.name, // Replace with the name of your product
-                // Other product details if necessary
-              },
-              unit_amount: item.price * 100,
-            },
-            quantity: item.quantity,
-          })));
         try {
             const {data}= await axios.post('http://localhost:5000/charge', {
                 orderItems: cartItems,
-                success_url: "http://localhost:3000/checkout/payment-success",  
-                cancel_url: "http://localhost:3000/checkout/payment-cancel"
+                success_url: 'http://localhost:3000/checkout/payment-success/', 
+                cancel_url: 'http://localhost:3000/checkout/payment-cancel/',  
             })
-            console.log(data.url)
-            location.href = data.url
+            console.log('url', data.url)
+            // location.href = data.url
+
 
          } catch (error) {
             console.log("error", error)
@@ -52,11 +39,7 @@ const {
             <div className="lg:col-span-2 col-span-3 bg-indigo-50 space-y-8 px-12">
                 <div   className="mt-8 p-4 relative flex flex-col sm:flex-row sm:items-center bg-white shadow rounded-md">
                     <div className="flex flex-row items-center border-b sm:border-b-0 w-full sm:w-auto pb-4 sm:pb-0">
-                        <div className="text-yellow-500">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="w-6 sm:w-5 h-6 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </div>
+                         
                         <div className="text-sm font-medium ml-3">Checkout</div>
                     </div>
                     <div className="text-sm tracking-wide text-gray-500 mt-4 sm:mt-0 sm:ml-4">Complete your shipping and payment details below.</div>

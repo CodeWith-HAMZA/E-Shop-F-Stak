@@ -2,7 +2,7 @@
 import Header from "@/app/Header";
 import "./globals.css";
 import { Inter } from "next/font/google";
-import { ToastContainer } from "react-toastify";
+import  { Toaster } from 'react-hot-toast';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,19 +20,8 @@ export default function RootLayout({
     <html lang="en">
       <head></head>
 
-      <body> 
-      <ToastContainer
-          position="top-center"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
-        />
+      <body>  
+      <Toaster />
         <Header />
         {children} 
       </body>
