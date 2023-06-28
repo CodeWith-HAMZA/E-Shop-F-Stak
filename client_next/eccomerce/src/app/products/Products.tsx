@@ -1,8 +1,10 @@
+import api from "@/services/api";
 import ProductsGrid from "./ProductsGrid";
 
 interface Props {
   readonly productsCategory: string;
   children: JSX.Element;
+  readonly productsFilterParams: { minPrice: string; maxPrice: string };
 }
 function capitalize(str: string): string {
   if (typeof str !== "string" || str.length === 0) {
@@ -16,30 +18,48 @@ function parseSpaces(str: string) {
   return replacedString;
 }
 
-const fetchProducts = async (productsCategory: string) => {
+const fetchProducts = async (
+  category: string,
+  productsFilterParams: { minPrice: string; maxPrice: string }
+) => {
   // if (typeof productsCategory === "string") return;
-  const fetchByCategory: boolean = productsCategory.toLowerCase() !== "all";
+  const fetchByCategory: boolean = category.toLowerCase() !== "all";
+  const { minPrice, maxPrice } = productsFilterParams;
+  try {
+    console.log(productsFilterParams);
+    const { data } = await api.get(`/products/`, {
+      params: {
+        ...(fetchByCategory ? { category: decodeURIComponent(category) } : {}),
+        ...(minPrice ? { minPrice: minPrice } : {}),
+        ...(maxPrice ? { maxPrice: maxPrice } : {}),
+      },
+    });
+    console.log(productsFilterParams);
 
-  const res = await fetch(
-    `http://localhost:5500/api/v1/products/${
-      fetchByCategory ? `?category=${productsCategory}` : ""
-    }`,
-    {
-      method: "GET",
-    }
-  );
-  const data = await res.json();
-  console.log("wah reh wah", data);
-
-  return data;
+    console.log(data);
+    return data;
+  } catch (err) {
+    console.log(
+      err,
+      "An Error Occ  ured While Fetching Products On Client Side"
+    );
+  }
 };
 
 const Products = async ({
   productsCategory,
   children,
+  productsFilterParams,
 }: Props): Promise<JSX.Element> => {
   // const { products } = await fetchProducts(productsCategory);
-  const products = await fetchProducts(productsCategory);
+  // const {
+  //   getProductDetails,
+  //   getProducts,
+  //   products,
+  //   totalResults,
+  //   selectedCurrentProduct,
+  // } = useProductStore((state) => state);
+  const _products = await fetchProducts(productsCategory, productsFilterParams);
 
   return (
     <section className="pt-10">
@@ -78,7 +98,7 @@ const Products = async ({
         </div>
         <div className="mt-4 lg:mt-8 lg:grid lg:grid-cols-4 lg:items-start lg:gap-8">
           {children}
-          <ProductsGrid products={products?.products} />
+          <ProductsGrid products={_products?.products} />
         </div>
       </div>
     </section>

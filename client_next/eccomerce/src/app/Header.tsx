@@ -7,7 +7,12 @@ import DropdownMenu from "../components/public/client/layout/DropdownMenu";
 import { BiUserCircle } from "react-icons/bi";
 import { HiMenuAlt3 } from "react-icons/hi";
 import { useState } from "react";
-import { showToast } from "@/utilities/showToastNotification";
+
+import api from "@/services/api";
+import { Grechen_Fuemen } from "next/font/google";
+import { useProductStore } from "./store/productStore";
+import { Product } from "@/types/Product";
+import { capitalize } from "@/utilities/capitalize";
 interface Link {
   path: string;
   content: string | JSX.Element;
@@ -27,10 +32,17 @@ function Header() {
   const [scrollDirection, setScrollDirection] = React.useState<string | null>(
     null
   );
+  const { getProducts, products } = useProductStore((state) => state);
 
   React.useEffect(() => {
     // * {{dispatching}} {{Fetching All Products With No Filters}} Through Action-Creator (Thunk)
-     
+    getProducts({})
+      .then((suc) => console.log("successfully fetched the products"))
+      .catch((err) =>
+        console.log("An Error Occured while fetching the products")
+      );
+    console.log();
+
     const handleScroll = () => {
       const currentScrollPos = window.pageYOffset;
 
@@ -80,11 +92,16 @@ function Header() {
         <nav className="md:ml-auto hidden md:flex gap-4 items-center text-base justify-center">
           <DropdownMenu
             MenuLinks={[
-              {
-                path: "/products",
-                name: "All Products",
-              },
-              { path: "/products/men's clothing", name: "men's clothing" },
+              { path: "/products/", name: "All Products" },
+              ...[
+                // @ts-ignore
+                ...new Set(
+                  products.map((product: Product) => product.category)
+                ),
+              ].map((category) => ({
+                path: `/products/${category}`,
+                name: capitalize(category),
+              })),
             ]}
             width="w-screen"
             // icon={<BiUserCircle className="h-5 w-5" />}

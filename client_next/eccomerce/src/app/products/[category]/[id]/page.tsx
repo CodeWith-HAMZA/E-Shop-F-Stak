@@ -1,5 +1,6 @@
 import ProductDetails from "@/components/public/client/ProductDetails";
 import React, { Fragment, useState } from "react";
+import Reviews from "./Reviews";
 interface Props {
   params: { id: string };
 }
@@ -12,6 +13,7 @@ const page = async ({ params }: Props) => {
   return (
     <Fragment>
       <ProductDetails product={product} />
+      <Reviews />
     </Fragment>
   );
 };

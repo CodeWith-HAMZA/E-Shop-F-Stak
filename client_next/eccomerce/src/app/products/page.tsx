@@ -1,13 +1,20 @@
 import ProductFilterPanel from "./ProductFilterPanel";
 import Products from "./Products";
-import ProductsContainer from "./ProductsContainer";
-
-const page = async () => {
+interface Props {
+  searchParams: object;
+  params: object;
+}
+const AllProducts: React.FunctionComponent<Props> = ({
+  searchParams,
+  params,
+}: Props) => {
+  console.log(searchParams);
   return (
-    <Products productsCategory="all">
+    // @ts-ignore
+    <Products productsCategory="all" productsFilterParams={searchParams}>
       <ProductFilterPanel />
     </Products>
   );
 };
 
-export default page;
+export default AllProducts;

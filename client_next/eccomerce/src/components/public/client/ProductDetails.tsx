@@ -20,7 +20,7 @@ const ProductDetails = ({ product }: Props) => {
   }
   return (
     <Fragment>
-      <section className="relative mx-auto max-w-screen-xl px-4 py-32">
+      <section className="bg-gray-50 relative mx-auto max-w-screen-xl px-4 py-32">
         <div className="grid grid-cols-1 items-start gap-8 md:grid-cols-2">
           <div className="grid grid-cols-2 gap-4 md:grid-cols-1">
             <img
@@ -250,10 +250,11 @@ const ProductDetails = ({ product }: Props) => {
                   type="submit"
                   className="block rounded bg-indigo-600 px-5 py-3 text-xs font-medium text-white hover:bg-indigo-500"
                   // onClick={() => Qty > 0 && gotoCheckOut()}
-                  onClick={(e) =>{
-                      console.log("first, added") 
-                      
-                    handleAddToCart(e)}}
+                  onClick={(e) => {
+                    console.log("first, added");
+
+                    handleAddToCart(e);
+                  }}
                 >
                   Add To Cart
                 </button>

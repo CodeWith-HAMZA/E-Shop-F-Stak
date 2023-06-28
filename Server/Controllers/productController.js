@@ -8,7 +8,7 @@ const ProductModel = require("../Schemas/ProductModel");
  */
 exports._getAllProducts = async (req, res) => {
   let q = { ...req.query };
-  const { name, minPrice, maxPrice, resultsPerPage, pageNumber } = q;
+  const { name, minPrice, maxPrice, resultsPerPage, pageNumber, sortBy } = q;
 
   if (minPrice > maxPrice) {
     return res.status(400).json({
@@ -53,10 +53,14 @@ exports._getAllProducts = async (req, res) => {
   console.log(q);
 
   try {
+    // const sort = {
+    //   ...(sortBy === "asc" && { price: 1 }),
+    //   ...(sortBy === "desc" && { price: -1 }),
+    // };
+
     // * Fetching All The Products From the Database According To the (Query)
-    const products = await ProductModel.find(
+    let products = await ProductModel.find(
       { ...q },
-      // ["name", "price"],
       resultsPerPage
         ? {
             limit: Number.parseInt(resultsPerPage),
@@ -67,7 +71,18 @@ exports._getAllProducts = async (req, res) => {
 
     const totalResults = products.length;
 
-    return res.status(200).json({ success: true, totalResults, products });
+    if (sortBy !== "") {
+      products = products.sort((p1, p2) => {
+        if (sortBy === "asc") return p1.price - p2.price;
+        if (sortBy === "desc") return p2.price - p1.price;
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      totalResults,
+      products: products.slice().sort((a, b) => b.price - a.price),
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({

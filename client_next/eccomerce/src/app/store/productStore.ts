@@ -39,7 +39,7 @@ export const useProductStore = create<ProductState>((set) => ({
         // show-toast about failing api cause
       }
     } catch (error) {
-      console.log(error, "while fetching products");
+      console.log(error, "ERROR Occured, while fetching products");
     }
   },
 
@@ -60,7 +60,10 @@ export const useProductStore = create<ProductState>((set) => ({
         // show-toast about failing api cause
       }
     } catch (error) {
-      console.log(error, "while fetching single product details");
+      console.log(
+        error,
+        "ERROR occured, while fetching single product details"
+      );
     }
   },
 }));

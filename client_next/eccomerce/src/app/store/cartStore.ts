@@ -37,20 +37,20 @@ export const useCartStore = create<CartState>((set) => ({
       );
 
       // *
-      if (item.quantity >= item.stock) {
+      if (item.quantity > item["stock"]) {
         return { ...state } as CartState;
       }
       console.log(existingItem, "existing item");
+
       if (existingItem) {
-        const updatedItems = state.cartItems.map((item, idx) => {
-          if (item._id === _id) {
+        const updatedItems = state.cartItems.map((item) => {
+          if (item._id === _id && item["quantity"] < item["stock"]) {
             item.quantity += quantity;
             return item;
           }
           return item;
         });
 
-        console.log(updatedItems, "updated items");
         return <CartState>{
           cartItems: [...(updatedItems as CartItem[])],
           subTotal: state.subTotal + item.price,

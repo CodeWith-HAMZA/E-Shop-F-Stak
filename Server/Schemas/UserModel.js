@@ -21,11 +21,9 @@ const UserModelSchema = new mongoose.Schema(
     profile: {
       public_id: {
         type: String,
-        required: [true, "Public Id Is Required"],
       },
       imageUrl: {
         type: String,
-        required: [true, "Image Url Is Required"],
       },
     },
     role: {

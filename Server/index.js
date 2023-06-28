@@ -1,7 +1,7 @@
 const http = require("http");
 const app = require("./app");
 const ConnectDB = require("./Configs/ConnectDB");
-const port = 5500;
+const port = 8000;
 const hostname = "loaclhost";
 
 // * Creating Server And Password app module as callback

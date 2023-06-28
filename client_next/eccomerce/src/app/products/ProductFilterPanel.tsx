@@ -1,17 +1,48 @@
 "use client";
 
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { useCartStore } from "../store/cartStore";
+import { useProductStore } from "../store/productStore";
+import { useEffect } from "react";
+import { Product } from "@/types/Product";
+interface ProductsFilterParams {
+  minPrice: number;
+  maxPrice: number;
+  orderBy: "asc" | "desc" | "";
+}
 
 const ProductFilterPanel = () => {
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm();
+  const { products } = useProductStore((state) => state);
+  const router = useRouter();
+  const { register, handleSubmit, formState } = useForm({
+    orderBy: "",
+    minPrice: "",
+    maxPrice: "",
+  });
 
-  function onSubmit(data: unknown) {
-    // call async action
+  function objectToQueryString(obj: any): string {
+    // Object.keys(obj).map((key) => {
+    //   return key && obj[key] ? { key: obj[key] } : {};
+    // });
+    // * removing the fields, if it contains empty value/string like ''
+    const newObj: any = {};
+
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key) && obj[key] !== "") {
+        newObj[key] = obj[key];
+      }
+    }
+
+    return new URLSearchParams(newObj).toString();
+  }
+
+  function onSubmit(data: ProductsFilterParams) {
+    // if (Number(data.minPrice) > Number(data.maxPrice)) {
+    //   return;
+    // }
+
+    // router.push(`/products/?${objectToQueryString(data)}`);
     console.log(data);
   }
   return (
@@ -21,24 +52,24 @@ const ProductFilterPanel = () => {
           htmlFor="SortBy"
           className="block text-xs font-medium text-gray-700"
         >
-          Sort By
+          Order By
         </label>
 
         <select
-          {...register("orderByPrice")}
+          {...register("orderBy")}
           id="SortBy"
           className="mt-1 rounded border-gray-300 text-sm"
         >
           <option value={""}>Sort By</option>
-          <option value="Price, DESC">Price, DESC</option>
-          <option value="Price, ASC">Price, ASC</option>
+          <option value="asc">Price, DESC</option>
+          <option value="desc">Price, ASC</option>
         </select>
       </div>
       <div>
         <p className="block text-xs font-medium text-gray-700">Filters</p>
 
         <div className="mt-1 space-y-2">
-          {/* <details className="overflow-hidden rounded border border-gray-300 [&_summary::-webkit-details-marker]:hidden">
+          <details className="overflow-hidden rounded border border-gray-300 [&_summary::-webkit-details-marker]:hidden">
             <summary className="flex cursor-pointer items-center justify-between gap-2 p-4 text-gray-900 transition">
               <span className="text-sm font-medium"> Availability </span>
 
@@ -125,7 +156,7 @@ const ProductFilterPanel = () => {
                 </li>
               </ul>
             </div>
-          </details> */}
+          </details>
 
           <details className="overflow-hidden rounded border border-gray-300 [&_summary::-webkit-details-marker]:hidden">
             <summary className="flex cursor-pointer items-center justify-between gap-2 p-4 text-gray-900 transition">
@@ -164,7 +195,7 @@ const ProductFilterPanel = () => {
               </header>
 
               <div className="border-t border-gray-200 p-4">
-                <div className="flex justify-between gap-4">
+                <div className="flex justify-between gap-4 ">
                   <label
                     htmlFor="FilterPriceFrom"
                     className="flex items-center gap-2"
@@ -176,7 +207,7 @@ const ProductFilterPanel = () => {
                       id="FilterPriceFrom"
                       {...register("minPrice")}
                       placeholder="From"
-                      className="w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
+                      className="w-full py-2 rounded-md border-gray-200 shadow-sm sm:text-sm"
                     />
                   </label>
 
@@ -191,7 +222,7 @@ const ProductFilterPanel = () => {
                       id="FilterPriceTo"
                       {...register("maxPrice")}
                       placeholder="To"
-                      className="w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
+                      className="w-full py-2 rounded-md border-gray-200 shadow-sm sm:text-sm"
                     />
                   </label>
                 </div>
@@ -201,7 +232,10 @@ const ProductFilterPanel = () => {
 
           <details className="overflow-hidden rounded border border-gray-300 [&_summary::-webkit-details-marker]:hidden">
             <summary className="flex cursor-pointer items-center justify-between gap-2 p-4 text-gray-900 transition">
-              <span className="text-sm font-medium"> Product Categories </span>
+              <span className="text-sm font-medium">
+                {" "}
+                Available Categories{" "}
+              </span>
 
               <span className="transition group-open:-rotate-180">
                 <svg
@@ -234,107 +268,29 @@ const ProductFilterPanel = () => {
               </header>
 
               <ul className="space-y-1 border-t border-gray-200 p-4">
-                <li>
-                  <label
-                    htmlFor="FilterRed"
-                    className="inline-flex items-center gap-2"
-                  >
-                    <input
-                      type="checkbox"
-                      id="FilterRed"
-                      className="h-5 w-5 rounded border-gray-300"
-                    />
+                {[
+                  // @ts-ignore
+                  ...new Set(
+                    products.map((product: Product) => product.category)
+                  ),
+                ].map((category, idx) => (
+                  <li key={idx}>
+                    <label
+                      htmlFor="FilterTeal"
+                      className="inline-flex items-center gap-2"
+                    >
+                      <input
+                        type="checkbox"
+                        id="FilterTeal"
+                        className="h-5 w-5 rounded border-gray-300"
+                      />
 
-                    <span className="text-sm font-medium text-gray-700">
-                      Red
-                    </span>
-                  </label>
-                </li>
-
-                <li>
-                  <label
-                    htmlFor="FilterBlue"
-                    className="inline-flex items-center gap-2"
-                  >
-                    <input
-                      type="checkbox"
-                      id="FilterBlue"
-                      className="h-5 w-5 rounded border-gray-300"
-                    />
-
-                    <span className="text-sm font-medium text-gray-700">
-                      Blue
-                    </span>
-                  </label>
-                </li>
-
-                <li>
-                  <label
-                    htmlFor="FilterGreen"
-                    className="inline-flex items-center gap-2"
-                  >
-                    <input
-                      type="checkbox"
-                      id="FilterGreen"
-                      className="h-5 w-5 rounded border-gray-300"
-                    />
-
-                    <span className="text-sm font-medium text-gray-700">
-                      Green
-                    </span>
-                  </label>
-                </li>
-
-                <li>
-                  <label
-                    htmlFor="FilterOrange"
-                    className="inline-flex items-center gap-2"
-                  >
-                    <input
-                      type="checkbox"
-                      id="FilterOrange"
-                      className="h-5 w-5 rounded border-gray-300"
-                    />
-
-                    <span className="text-sm font-medium text-gray-700">
-                      Orange
-                    </span>
-                  </label>
-                </li>
-
-                <li>
-                  <label
-                    htmlFor="FilterPurple"
-                    className="inline-flex items-center gap-2"
-                  >
-                    <input
-                      type="checkbox"
-                      id="FilterPurple"
-                      className="h-5 w-5 rounded border-gray-300"
-                    />
-
-                    <span className="text-sm font-medium text-gray-700">
-                      Purple
-                    </span>
-                  </label>
-                </li>
-
-                <li>
-                  <label
-                    htmlFor="FilterTeal"
-                    className="inline-flex items-center gap-2"
-                  >
-                    <input
-                      type="checkbox"
-                      id="FilterTeal"
-                      className="h-5 w-5 rounded border-gray-300"
-                    />
-
-                    <span className="text-sm font-medium text-gray-700">
-                      Teal
-                    </span>
-                  </label>
-                </li>
+                      <span className="text-sm font-medium text-gray-700">
+                        {category}
+                      </span>
+                    </label>
+                  </li>
+                ))}
               </ul>
             </div>
           </details>
