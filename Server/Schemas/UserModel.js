@@ -2,8 +2,6 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const crypto = require("crypto");
-
 const UserModelSchema = new mongoose.Schema(
   {
     name: { type: String, required: [true, "Name Is Required"] },
@@ -29,7 +27,7 @@ const UserModelSchema = new mongoose.Schema(
     role: {
       type: String,
       required: [true, "Role Is Required"],
-      enum: ["user", "admin"],
+      enum: ["user", "admin", "seller"],
       default: "user",
     },
     resetPasswordToken: {
@@ -68,10 +66,10 @@ UserModelSchema.methods.generateJWTAuthToken = async function () {
   const { _id, name, email, role } = this;
   const token = await jwt.sign(
     {
-      _id: _id,
-      name: name,
-      email: email,
-      role: role,
+      _id,
+      name,
+      email,
+      role,
     },
     "process.env.JWT_SECRETKEY",
     { expiresIn: "7d" }

@@ -30,8 +30,8 @@ const fetchProducts = async (
     const { data } = await api.get(`/products/`, {
       params: {
         ...(fetchByCategory ? { category: decodeURIComponent(category) } : {}),
-        ...(minPrice ? { minPrice: minPrice } : {}),
-        ...(maxPrice ? { maxPrice: maxPrice } : {}),
+        ...(minPrice ? { minPrice } : {}),
+        ...(maxPrice ? { maxPrice } : {}),
       },
     });
     console.log(productsFilterParams);

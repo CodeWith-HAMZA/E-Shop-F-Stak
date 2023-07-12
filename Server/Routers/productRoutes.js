@@ -34,7 +34,7 @@ productRouter
   .route("/new")
   .post(
     checkUserAuthorization,
-    checkUserRoleAuthorization("admin"),
+    checkUserRoleAuthorization("seller"),
     _createProduct
   );
 
@@ -51,12 +51,12 @@ productRouter
   .get(_getProductDetails)
   .put(
     checkUserAuthorization,
-    checkUserRoleAuthorization("admin"),
+    checkUserRoleAuthorization("seller"),
     _updateProduct
   )
   .delete(
     checkUserAuthorization,
-    checkUserRoleAuthorization("admin"),
+    checkUserRoleAuthorization("seller"),
     _deleteProduct
   );
 

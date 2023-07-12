@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const productSchema = new mongoose.Schema(
   {
+    shop: { type: mongoose.Schema.Types.ObjectId, ref: "Shop", required: [true, "Mention Store id, for which this product belongs to"] },
     name: { type: String, required: [true, "Product Name Is Required"] },
     description: {
       type: String,
@@ -40,6 +41,7 @@ const productSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    
     reviews: [
       {
         user: {

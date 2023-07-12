@@ -43,11 +43,11 @@ exports.checkUserAuthorization = async (req, res, next) => {
  * @returns A middleware function that checks if the user has the required role.
  * If the user does not have the required role, a 403 error is returned.
  */
-exports.checkUserRoleAuthorization = function (checkRequiredRole = "admin") {
+exports.checkUserRoleAuthorization = function (checkRequiredRole) {
   return (req, res, next) => {
     // ? Checking If The "User" Has The Exact Same Role (admin or a normal user)
     if (req.user["role"] !== checkRequiredRole.toLowerCase()) {
-      console.log("Admin role: " + req.user["role"]);
+      console.log("Role Matched: " + req.user["role"]);
 
       return res.status(403).json({
         message: `${req.user["role"]} role is not Allowed to Access this Resource 403`,

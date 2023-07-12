@@ -16,8 +16,9 @@ const { trace } = require("../Routers/userRoutes");
  * @throws {Object} Returns an error object with a message if there is an issue with the request.
  */
 exports._registerUser = async (req, res) => {
-  const { email, password } = req.body;
-  console.log("first");
+  const { email, password } = req.body; 
+
+  
   try {
     // * Validating User Body-Data (Both-Are-Required)
     if (!email || !password) {
@@ -31,7 +32,7 @@ exports._registerUser = async (req, res) => {
       return res.status(400).json({ message: "Please provide valid email" });
     }
 
-    const User = await UserModel.findOne({ email: email });
+    const User = await UserModel.findOne({ email });
     if (User) {
       return res.status(400).json({
         success: false,
@@ -40,7 +41,7 @@ exports._registerUser = async (req, res) => {
     }
 
     // * Validating Password-Length (Must Be 8 at least)
-    if (password.length <= 8) {
+    if (password.length < 8) {
       return res.status(400).json({
         success: false,
         message: "Password must be at least 8 characters",
@@ -89,7 +90,7 @@ exports._loginUser = async (req, res) => {
       return res.status(400).json({ error: "Please provide valid email" });
     }
     // * Validating Password-Length (Must Be 8 at least)
-    if (password.length <= 8) {
+    if (password.length < 8) {
       return res
         .status(400)
         .json({ error: "Password must be at least 8 characters" });

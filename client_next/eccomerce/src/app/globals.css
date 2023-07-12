@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-.responsiveSearchBar {
-  @apply w-[3.5rem] focus:w-[13rem] transition-all sm:focus:w-auto sm:w-auto;
+
+
+
+html {
+  scroll-behavior: smooth;
 }

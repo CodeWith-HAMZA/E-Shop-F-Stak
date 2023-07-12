@@ -1,4 +1,5 @@
 const ProductModel = require("../Schemas/ProductModel");
+const ShopModel = require("../Schemas/ShopModel");
 
 /**
  * Retrieves all products from the database that match the given query parameters.
@@ -9,12 +10,11 @@ const ProductModel = require("../Schemas/ProductModel");
 exports._getAllProducts = async (req, res) => {
   let q = { ...req.query };
   const { name, minPrice, maxPrice, resultsPerPage, pageNumber, sortBy } = q;
-
-  if (minPrice > maxPrice) {
+ 
+  if (Number(minPrice) > Number(maxPrice)) { 
     return res.status(400).json({
       success: false,
-      message:
-        "Invalid price range: minPrice must be less than or equal to maxPrice.  ",
+      message: `(${minPrice + ' > ' + maxPrice}) Invalid price range: minPrice must be less than or equal to maxPrice.`,
     });
   }
 
@@ -48,7 +48,7 @@ exports._getAllProducts = async (req, res) => {
     "lt",
   ];
 
-  ToBeRemovedFields.forEach((field) => delete q[field]);
+  ToBeRemovedFields.forEach(field => delete q[field]);
 
   console.log(q);
 
@@ -63,9 +63,9 @@ exports._getAllProducts = async (req, res) => {
       { ...q },
       resultsPerPage
         ? {
-            limit: Number.parseInt(resultsPerPage),
-            skip: Number.parseInt(SkippedProducts),
-          }
+          limit: Number.parseInt(resultsPerPage),
+          skip: Number.parseInt(SkippedProducts),
+        }
         : {}
     ).lean();
 
@@ -128,8 +128,22 @@ exports._getProductDetails = async (req, res) => {
  * @throws {Object} An error object containing information about the error that occurred.
  */
 exports._createProduct = async (req, res) => {
+  const product = { ...req.body };
+  product.category =  product.category.toLowerCase();
+  
+   
   try {
-    const CreatedProduct = await ProductModel.create(req.body);
+    const shop = await ShopModel.findById(product.shop);
+
+    if(!shop){
+      return res.status(404).json({
+        success: true,
+        CreatedProduct,
+        message: "Shop Now Found With This ID",
+      });
+    }
+
+    const CreatedProduct = await ProductModel.create(product);
 
     return res.status(200).json({
       success: true,
