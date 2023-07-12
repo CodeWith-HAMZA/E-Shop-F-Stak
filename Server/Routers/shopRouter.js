@@ -17,7 +17,7 @@ const {
 // * For Seller
 shopRouter
   .route("/new")
-  .get(
+  .post(
     checkUserAuthorization,
     checkUserRoleAuthorization("seller"),
     _createShop

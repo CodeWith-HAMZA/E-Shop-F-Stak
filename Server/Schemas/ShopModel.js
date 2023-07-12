@@ -17,13 +17,9 @@ const ShopModelSchema = new mongoose.Schema(
             type: [mongoose.Schema.Types.ObjectId],
             ref: "EProduct"
         },
-        image: {
-            public_id: {
-                type: String,
-            },
-            imageUrl: {
-                type: String,
-            },
+        image: { 
+            public_id: { type: String, }, 
+            imageUrl: { type: String, },
         },
     },
     { timestamps: true, }

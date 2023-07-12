@@ -1,3 +1,4 @@
+const { isValidObjectId } = require("mongoose");
 const ShopModel = require("../Schemas/ShopModel");
 const UserModel = require("../Schemas/UserModel");
 
@@ -14,7 +15,21 @@ exports._createShop = async (req, res) => {
     productCategories,
   } = req.body;
 
+  if(!owner){
+    return res.status(404).json({
+      success: false,
+      message: "User(Owner)-Id Not Found!",
+    });  
+  }
+  if(!isValidObjectId(owner)){
+    
+    return res.status(400).json({
+      success: false,
+      message: "User(Owner)-Id Is Invalid!",
+    });
+  }
   try {
+
     // Find the owner in the UserModel
     const user = await UserModel.findById(owner);
     if (!user) {
@@ -24,7 +39,7 @@ exports._createShop = async (req, res) => {
         message: "Owner not found",
       });
     }
-
+    console.log(req.body)
     // Create a new shop using the ShopModel schema
     const newShop = new ShopModel({
       owner,
@@ -43,7 +58,7 @@ exports._createShop = async (req, res) => {
     // Return a success response
     return res.status(201).json({
       success: true,
-      message: "Shop created successfully",
+      message: "Shop Create Successfully",
       shop: newShop,
     });
   } catch (error) {
@@ -64,9 +79,63 @@ exports._createShop = async (req, res) => {
     });
   }
 };
-exports._getShopsForSpecificUser = (req, res) => {};
+exports._getShopsForSpecificUser = async (req, res) => {
+  // // const  {ownerId} = req.query ;
+  const ownerId = req['user']['_id'];
+  
+  
+    try {
+
+    // Check if userId is a valid ObjectId
+    if(!ownerId)
+      return res.status(400).json({ error: ' Owner-Id (ownerId) Not Found' });
+    
+    if (!isValidObjectId( ownerId)) 
+      return res.status(400).json({ error: 'Invalid Owner-Id (ownerId)' });
+    
+
+    // Find all shops owned by the user
+    const shops = await ShopModel.find({ owner: ownerId }).exec();
+     
+
+    if (!shops || shops.length === 0) {
+      return res.status(404).json({ error: 'No shops found for this user' });
+    }
+
+    // Return the list of shops
+    return res.status(200).json({success: true, shops, message: "All Shops For An Specific User"});
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Error Finding Shops' });
+  }
+};
 exports._getAllShops = (req, res) => {};
-exports._getSingleShopDetailsForSpecificUser = (req, res) => {};
+exports._getSingleShopDetailsForSpecificUser =  async (req, res) => {
+  const ownerId = req['user']['_id'];
+  const shopId = req.params.id;
+
+  try {
+    // Check if userId and shopId are valid ObjectIds
+    if (!isValidObjectId(ownerId) || !isValidObjectId(shopId)) {
+      return res.status(400).json({success: false, message: 'Invalid user ID or shop ID' });
+    }
+
+    // Find the shop owned by the user
+    const shop = await ShopModel.findOne({ _id: shopId, owner: ownerId })
+ 
+    if (!shop) {
+      return res.status(404).json({success: false, message: 'Shop not found' });
+    }
+
+    // Return the shop details
+    return res.status(200).json({success: true, shop});
+    
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: 'Error While Fetching The Shop Details' });
+  }
+
+};
 exports._getSingleShopDetails = (req, res) => {};
 exports._updateShop = (req, res) => {};
 exports._deleteShop = (req, res) => {};
