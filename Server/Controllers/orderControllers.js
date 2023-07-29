@@ -3,6 +3,7 @@ const { default: mongoose } = require("mongoose");
 const OrderModel = require("../Schemas/OrderModel");
 const ProductModel = require("../Schemas/ProductModel");
 const UserModel = require("../Schemas/UserModel");
+const ShopModel = require("../Schemas/ShopModel");
 
 // * ADMIN-ROUTE (Get All Orders Of All The Users)
 exports._getAllOrders = async (req, res) => {
@@ -41,33 +42,33 @@ exports._getOrdersForSpecificUser = async (req, res) => {
     return res.status(400).json({ error: "User ID is required" });
   }
   try {
-    const orders = await OrderModel.find({ user: req.user["_id"] });
+    const orders = await OrderModel.find({ user: userId });
 
     if (!orders || orders.length === 0) {
       return res.status(404).json({
         success: false,
         message: "No orders found for the specified user",
       });
-    } else {
-      return res
-        .status(200)
-        .json({ success: true, orders, tatalResults: orders.length });
     }
+    return res
+      .status(200)
+      .json({ success: true, orders, totalResults: orders.length });
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, error: "Server error" });
   }
 };
-// Login route
-exports._getOrderDetails = async (req, res) => {
-  try {
-    const { id } = req.params;
-    if (!mongoose.Types.ObjectId.isValid(orderId)) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid order Object ID" });
-    }
 
+// login - seller route
+exports._getOrderDetails = async (req, res) => {
+  const orderId = req.params.id;
+  const userId = req.user["_id"];
+  if (!mongoose.isValidObjectId(orderId)) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Invalid order Object ID" });
+  }
+  try {
     const order = await OrderModel.findById(orderId).populate({
       path: "user",
       select: "name email",
@@ -78,15 +79,47 @@ exports._getOrderDetails = async (req, res) => {
         .status(404)
         .json({ success: false, message: "Order not found" });
     }
+    const shops = await ShopModel.find({ owner: userId });
+
+    if (!shops.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Shops not found" });
+    }
 
     return res.status(200).json({ success: true, order });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ success: false, message: "Server Error" });
+  } catch (error) {
+    console.error(error);
+
+    // Check for specific error scenarios
+    if (error.name === "CastError" && error.kind === "ObjectId") {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid order ID",
+      });
+    } else if (error.name === "ValidationError") {
+      return res.status(400).json({
+        success: false,
+        message: "Validation error",
+        error: error.message,
+      });
+    } else if (error.name === "MongoError" && error.code === 11000) {
+      return res.status(400).json({
+        success: false,
+        message: "Duplicate key error",
+        error: error.message,
+      });
+    }
+
+    // For unexpected errors, return a generic error message
+    return res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
   }
 };
 
-// * LOGIN-ROUTE (Create Order For The User)
+// * login route
 exports._createOrder = async (req, res) => {
   let {
     user,
@@ -215,44 +248,41 @@ async function updateStock(productId, productQuantity) {
   await product.save({ validateAfterSave: false });
 }
 
-
-
 // * Check out with stripe payment gateway
 exports._checkout = async (req, res) => {
-  const {success_url, cancel_url, orderItems} = req.body
+  const { success_url, cancel_url, orderItems } = req.body;
   try {
-    const paymentIntent = await  stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
+    const paymentIntent = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
       line_items: [
         {
           price_data: {
             currency: "pkr",
             product_data: {
-              name: 'Tshirt XL/LG Gym', // Replace with the name of your product
+              name: "Tshirt XL/LG Gym", // Replace with the name of your product
               // Other product details if necessary
             },
             unit_amount: 3499999,
           },
           quantity: 3,
         },
-       
       ],
-      mode: 'payment',
-      success_url: 'https://www.google.com/', // Replace with your success URL
-      cancel_url: 'https://www.facebook/', // Replace with your cancel URL
-    })
-      console.log("first")
+      mode: "payment",
+      success_url: "https://www.google.com/", // Replace with your success URL
+      cancel_url: "https://www.facebook/", // Replace with your cancel URL
+    });
+    console.log("first");
     // Handle successful payment
-    res.status(200).json({ success: true, data: req.body, url:paymentIntent.url   });
+    res
+      .status(200)
+      .json({ success: true, data: req.body, url: paymentIntent.url });
   } catch (error) {
     // Handle payment error
     res.status(500).json({ error });
   }
+};
 
-}
-
-
-// app.post('/charge', async (req, res) => {  
+// app.post('/charge', async (req, res) => {
 //   try {
 //     const paymentIntent = await  stripe.checkout.sessions.create({
 //       payment_method_types: ['card'],
@@ -268,7 +298,7 @@ exports._checkout = async (req, res) => {
 //           },
 //           quantity: 3,
 //         },
-       
+
 //       ],
 //       mode: 'payment',
 //       success_url: 'https://www.google.com/', // Replace with your success URL
@@ -282,6 +312,3 @@ exports._checkout = async (req, res) => {
 //     res.status(500).json({ error: error });
 //   }
 // });
-
-
-

@@ -13,6 +13,8 @@
     "nodemon": "^2.0.20"
   },
   "dependencies": {
+    "@emailjs/browser": "^3.11.0",
+    "axios": "^1.4.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
@@ -21,7 +23,7 @@
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^6.10.0",
-    "nodemailer": "^6.9.1",
+    "sendmail": "^1.6.1",
     "stripe": "^12.9.0",
     "validator": "^13.9.0"
   }

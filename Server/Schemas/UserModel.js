@@ -39,6 +39,7 @@ const UserModelSchema = new mongoose.Schema(
       select: false,
     },
   },
+  
   {
     timestamps: true,
   }
@@ -71,6 +72,7 @@ UserModelSchema.methods.generateJWTAuthToken = async function () {
       email,
       role,
     },
+
     "process.env.JWT_SECRETKEY",
     { expiresIn: "7d" }
   );

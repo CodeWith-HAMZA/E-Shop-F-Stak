@@ -7,6 +7,11 @@ const orderSchema = new mongoose.Schema(
       ref: "User",
       required: [true, "User Id Is Required"],
     },
+    shop: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Shop",
+      required: [true, "Mention Store id, which this order belongs for"],
+    },
     shippingInfo: {
       customerName: { type: String, required: true },
       address: { type: String, required: true },
@@ -19,8 +24,20 @@ const orderSchema = new mongoose.Schema(
     },
     orderStatus: {
       type: String,
-      enum: ["Pending", "Processing", "Shipped", "Delivered", "Failed"],
-      default: "Pending",
+      enum: [
+        "placed",
+        "pending",
+        "processing",
+        "shipped",
+        "delivered",
+        "cancelled",
+        "refunded",
+        "on hold",
+        "partially shipped",
+        "returned",
+        "disputed",
+      ],
+      default: "pending",
     },
     orderItems: [
       {

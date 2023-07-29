@@ -16,9 +16,8 @@ const { trace } = require("../Routers/userRoutes");
  * @throws {Object} Returns an error object with a message if there is an issue with the request.
  */
 exports._registerUser = async (req, res) => {
-  const { email, password } = req.body; 
+  const { email, password } = req.body;
 
-  
   try {
     // * Validating User Body-Data (Both-Are-Required)
     if (!email || !password) {
@@ -153,12 +152,13 @@ exports._forgotPassword = async function (req, res) {
     console.log(resetPasswordToken, "Password Reset Token");
 
     // * Sending Reset-Password-Token Through On The {{Given-Gmail}}
-    await SendMail(resetPasswordToken, email);
+    // await SendMail(resetPasswordToken, email);
+    // * Gotta send gmail without nodemailer (anyother-way)
 
     // * Sending Success Response
     return res.status(200).json({
       success: true,
-      message: `Successfully Sent The Reset-Password-Token To Your Gmail: ${email}`,
+      message: `Successfully not sent The Reset-Password-Token To Your Gmail: ${email}`,
     });
   } catch (error) {
     console.log(error);

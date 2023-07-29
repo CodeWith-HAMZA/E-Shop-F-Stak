@@ -1,32 +1,56 @@
-const nodemailer = require("nodemailer");
+// template_zo4aqmj
+const { default: axios } = require("axios");
 
+// gmscEfDDjMUBdGiXx -public
+// service_vsyheop -service
 async function SendMail(ResetPasswordToken, Receiver_UserGivenGmail) {
-  const transporter = nodemailer.createTransport({
-    // host: "smtp.gmail.com", // * SMTP-GMAIL-HOST
-    // port: 587, // * Gmail-Service-PORT
-    service: "gmail",
-    // secure: false,
+  // Replace with your EmailJS user ID
 
-    // * Master-Gmail-Account (Sender's Gmail-Account)
-    auth: {
-      user: "mrw58901878@gmail.com",
-      pass: "xnpyrzelhaxlrzzs",
+  // emailjs
+  //   .send("service_vsyheop", "template_zo4aqmj", templateParams, {
+  //     publicKey: "gmscEfDDjMUBdGiXx",
+  //     // privateKey: "YGnxUMbYH_l88E-DFGBHb", // optional, highly recommended for security reasons
+  //   })
+  //   .then(
+  //     (response) => {
+  //       console.log("SUCCESS!", response.status, response.text);
+  //     },
+  //     (err) => {
+  //       console.log("FAILED...", err);
+  //     }
+  //   );
+  const emailData = {
+    service_id: "service_vsyheop", // Replace with your EmailJS service ID
+    template_id: "template_zo4aqmj", // Replace with your EmailJS template ID
+    user_id: "3pXuSGOaU1PzgX8Qv", // Replace with your EmailJS user ID
+    template_params: {
+      recipient_name: "John Doe", // Example dynamic email variable
+      message: "This is the email content.", // Example dynamic email variable
+      email: "wah rey",
     },
-  });
+    to_email: "codeonlinesource@gmail.com", // Replace with the recipient's email address
+  };
+  // try {
+  //   const sent = await emailjs.send(
+  //     "service_vsyheop",
+  //     "template_zo4aqmj",
+  //     { email: "hamzasha@gmail.com", pass: "hazmeuaoh" },
+  //     "3pXuSGOaU1PzgX8Qv"
+  //   );
+  //   console.log(sent);
+  // } catch (error) {
+  //   console.log("ERROR", error);
+  // }
 
-  try {
-    // * send mail with defined transport object
-    const info = await transporter.sendMail({
-      from: "mrw58901878@gmail.com", // sender address
-      to: "starjoker343@gmail.com", // list of receivers
-      subject: `Password Reset`, // Subject line
-      html: `Copy The "Reset Password TTTTT": ${ResetPasswordToken} `,
-    });
-
-    console.log("Message sent: %s", info.messageId);
-  } catch (error) {
-    console.log(error);
-  }
+  // try {
+  //   const { data } = await axios.post(
+  //     "POST https://api.emailjs.com/api/v1.0/email/send",
+  //     emailData
+  //   );
+  //   console.log(data);
+  // } catch (error) {
+  //   console.log(error);
+  // }
 }
 
 module.exports = SendMail;

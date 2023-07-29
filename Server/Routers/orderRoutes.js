@@ -43,7 +43,13 @@ orderRouter.route("/").get(checkUserAuthorization, _getOrdersForSpecificUser);
  * @param {function} _getOrderDetails - Controller function to retrieve the details of the order.
  * @returns None
  */
-orderRouter.route("/:id").get(checkUserAuthorization, _getOrderDetails);
+orderRouter
+  .route("/:id")
+  .get(
+    checkUserAuthorization,
+    checkUserRoleAuthorization("seller"),
+    _getOrderDetails
+  );
 
 // * Admin
 /**
@@ -65,7 +71,6 @@ orderRouter
     _getAllOrders
   );
 
-
-  // * Gotta work on soon
-  orderRouter.route('/checkout').post(_checkout);
+// * Gotta work on soon
+orderRouter.route("/checkout").post(_checkout);
 module.exports = orderRouter;

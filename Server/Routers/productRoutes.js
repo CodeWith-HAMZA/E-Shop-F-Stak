@@ -69,7 +69,7 @@ productRouter
  */
 productRouter
   .route("/:id/reviews/new")
-  .patch(checkUserAuthorization, _createProductReview);
+  .post(checkUserAuthorization, _createProductReview);
 
 /**
  * Express route handler for getting the reviews of a product.
@@ -78,8 +78,8 @@ productRouter
  * @returns None
  */
 
-productRouter.route("/reviews").get(_getProductReviews);
+productRouter.route("/:id/reviews").get(_getProductReviews);
 
-// productRouter.route("/deleteA/:productId").delete();
+productRouter.route("/:id/reviews/:reviewId").delete(() => {});
 
 module.exports = productRouter;
