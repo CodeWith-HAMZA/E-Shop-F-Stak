@@ -62,7 +62,7 @@ exports._getOrdersForSpecificUser = async (req, res) => {
 // login - seller route
 exports._getOrderDetails = async (req, res) => {
   const orderId = req.params.id;
-  const userId = req.user["_id"];
+  const sellerId = req.user["_id"];
   if (!mongoose.isValidObjectId(orderId)) {
     return res
       .status(400)
@@ -79,7 +79,7 @@ exports._getOrderDetails = async (req, res) => {
         .status(404)
         .json({ success: false, message: "Order not found" });
     }
-    const shops = await ShopModel.find({ owner: userId });
+    const shops = await ShopModel.find({ owner: sellerId });
 
     if (!shops.length === 0) {
       return res
