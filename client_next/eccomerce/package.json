@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.7.14",
+    "@nextui-org/react": "^2.2.9",
     "@types/node": "20.1.7",
     "@types/react": "18.2.6",
     "@types/react-dom": "18.2.4",
@@ -18,6 +19,7 @@
     "eslint": "8.40.0",
     "eslint-config-next": "13.4.2",
     "formik": "^2.2.9",
+    "framer-motion": "^10.16.5",
     "next": "13.4.2",
     "postcss": "8.4.23",
     "react": "18.2.0",
