@@ -10,30 +10,47 @@ import {
   NavbarContent,
   NavbarItem,
 } from "@nextui-org/react";
+import Link from "next/link";
 import { useSession } from "next-auth/react";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
-import React from "react";
-import Link from "next/link";
+import React, { useEffect, useMemo } from "react";
+
 import ProfileDropdown from "./ProfileDropdown";
 import "react-modern-drawer/dist/index.css";
 import CartItemCard from "./CartItemCard";
 import CartItemsContainer from "../containers/CartItemsContainer";
 import { cartItemsDemo } from "@/types";
+import useCartStore from "@/store/cart";
 
 export default function TopNavBar() {
   const r = useRouter();
+  const { items, addItem, decreaseQuantity, increaseQuantity, removeItem } =
+    useCartStore();
   const [isOpen, setIsOpen] = React.useState(false);
   const toggleDrawer = () => {
     setIsOpen((prevState) => !prevState);
   };
   const session = useSession(authOptions);
+  const subtotal = useMemo(() => {
+    return items.reduce((total, item) => total + item.price * item.quantity, 0);
+  }, [items]);
+
   const cartItems = (
     <>
       <div className="flex items-start justify-between">
-        <h2 className="text-lg font-medium text-gray-900" id="slide-over-title">
-          Shopping cart
-        </h2>
+        <div
+          className=" flex gap-3 text-lg font-medium text-gray-900 group "
+          id="slide-over-title"
+        >
+          <span>Shopping cart</span>
+          <Link
+            href={"/cart"}
+            className="group-hover:opacity-100 opacity-0 transition-all hover:text-purple-600"
+          >
+            Full View {">"}
+          </Link>
+        </div>
         <div className="ml-3 flex h-7 items-center">
           <button
             type="button"
@@ -60,12 +77,50 @@ export default function TopNavBar() {
       </div>
 
       <CartItemsContainer>
-        {cartItemsDemo.map((_, index) => (
-          <CartItemCard key={index} item={_} />
+        {items.map((cartItem, index) => (
+          <CartItemCard
+            key={index}
+            item={cartItem}
+            increaseQuantity={increaseQuantity}
+            decreaseQuantity={decreaseQuantity}
+          />
         ))}
         {/* More product-items in cart... */}
       </CartItemsContainer>
     </>
+  );
+
+  const cartFooter = (
+    <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
+      <div className="flex justify-between text-base font-medium text-gray-900">
+        <p>Subtotal</p>
+        <p>${subtotal}</p>
+      </div>
+      <p className="mt-0.5 text-sm text-gray-500">
+        Shipping and taxes calculated at checkout.
+      </p>
+      <div className="mt-6">
+        <a
+          href="#"
+          className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
+        >
+          Checkout
+        </a>
+      </div>
+      <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
+        <p>
+          or
+          <button
+            onClick={toggleDrawer}
+            type="button"
+            className="font-medium text-indigo-600 hover:text-indigo-500"
+          >
+            Continue Shopping
+            <span aria-hidden="true"> &rarr;</span>
+          </button>
+        </p>
+      </div>
+    </div>
   );
   return (
     <div>
@@ -96,10 +151,13 @@ export default function TopNavBar() {
             <Input type="text" placeholder="Search..." className="w-52" />
             <Button color="secondary">Search</Button>
 
-            <div className="relative group" onClick={toggleDrawer}>
-              <a href="#" className="text-gray-800 hover:text-purple-600">
+            <div
+              className="relative group cursor-pointer"
+              onClick={toggleDrawer}
+            >
+              <span className="text-gray-800 hover:text-purple-600">
                 <svg
-                  className="w-6 h-6"
+                  className="w-7 h-7"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -112,10 +170,13 @@ export default function TopNavBar() {
                     d="M4 4h16M2 6h4l3 13h10M6 6h10"
                   ></path>
                 </svg>
-              </a>
-              <div className="absolute -top-1 -right-1 bg-purple-600 text-white rounded-full w-5 h-5 flex items-center justify-center">
-                <span>3</span>
-              </div>
+              </span>
+
+              {items.length ? (
+                <span className="absolute -top-1 -right-1 bg-purple-600 text-white rounded-full w-5 h-5 flex items-center justify-center">
+                  <span>{items.length}</span>
+                </span>
+              ) : null}
             </div>
           </div>
           {session.status === "unauthenticated" ? (
@@ -150,38 +211,10 @@ export default function TopNavBar() {
         direction="right"
         className="py-4 px-3"
         size={"23rem"}
+        overlayColor={"#351F4A"}
       >
         {cartItems}
-        <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
-          <div className="flex justify-between text-base font-medium text-gray-900">
-            <p>Subtotal</p>
-            <p>$262.00</p>
-          </div>
-          <p className="mt-0.5 text-sm text-gray-500">
-            Shipping and taxes calculated at checkout.
-          </p>
-          <div className="mt-6">
-            <a
-              href="#"
-              className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
-            >
-              Checkout
-            </a>
-          </div>
-          <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
-            <p>
-              or
-              <button
-                onClick={toggleDrawer}
-                type="button"
-                className="font-medium text-indigo-600 hover:text-indigo-500"
-              >
-                Continue Shopping
-                <span aria-hidden="true"> &rarr;</span>
-              </button>
-            </p>
-          </div>
-        </div>
+        {cartFooter}
       </Drawer>
     </div>
   );

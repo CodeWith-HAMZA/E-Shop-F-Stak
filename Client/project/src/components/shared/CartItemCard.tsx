@@ -4,10 +4,14 @@ import { Item } from "@/types";
 import React from "react";
 interface Props {
   item: Item;
+  increaseQuantity: (item: Item) => void;
+  decreaseQuantity: (item: Item) => void;
 }
-export default function CartItemCard({ item }: Props) {
-  const { increaseQuantity, decreaseQuantity } = useCartStore();
-  console.log(item);
+export default function CartItemCard({
+  item,
+  increaseQuantity,
+  decreaseQuantity,
+}: Props) {
   return (
     <li className="flex py-6">
       <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
@@ -37,6 +41,9 @@ export default function CartItemCard({ item }: Props) {
             <button
               type="button"
               className="px-3 py-1 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none"
+              onClick={() => {
+                decreaseQuantity(item);
+              }}
             >
               -
             </button>
@@ -44,6 +51,9 @@ export default function CartItemCard({ item }: Props) {
             <button
               type="button"
               className="px-2 py-1 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none"
+              onClick={() => {
+                increaseQuantity(item);
+              }}
             >
               +
             </button>

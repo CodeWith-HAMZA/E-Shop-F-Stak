@@ -23,7 +23,7 @@ export const cartItemsDemo: Item[] = [
       "https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg",
     stock: 23,
     quantity: 3,
-    price: 234.3,
+    price: 24.3,
   },
   {
     id: 1,
@@ -32,7 +32,7 @@ export const cartItemsDemo: Item[] = [
       "https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg",
     stock: 7,
     quantity: 3,
-    price: 234.3,
+    price: 235,
   },
   {
     id: 3,
@@ -41,6 +41,6 @@ export const cartItemsDemo: Item[] = [
       "https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg",
     stock: 7,
     quantity: 3,
-    price: 234.3,
+    price: 4.2,
   },
 ];

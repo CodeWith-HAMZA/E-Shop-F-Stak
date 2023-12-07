@@ -63,6 +63,7 @@ const useCartStore = create<CartStore>((set) => ({
         const updatedItems = state.items.map((i) =>
           i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
         );
+        console.log(updatedItems);
         return { items: updatedItems };
       } else {
         // If the item doesn't exist in the cart or there is no available stock, do not make any changes
