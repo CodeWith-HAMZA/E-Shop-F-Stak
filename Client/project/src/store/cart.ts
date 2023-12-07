@@ -1,8 +1,8 @@
-import { CartStore, Item } from "@/types";
+import { CartStore, Item, cartItemsDemo } from "@/types";
 import { create } from "zustand";
 
 const useCartStore = create<CartStore>((set) => ({
-  items: [],
+  items: <Item[]>cartItemsDemo,
   addItem: (item: Item) =>
     set((state: CartStore) => {
       const existingItem = state.items.find((i) => i.id === item.id);
@@ -17,6 +17,7 @@ const useCartStore = create<CartStore>((set) => ({
           const updatedItems = state.items.map((i) =>
             i.id === item.id ? updatedItem : i
           );
+
           return { items: updatedItems };
         } else {
           // If there is no available stock, do not make any changes

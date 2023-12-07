@@ -1,7 +1,5 @@
 "use client";
-
 import Drawer from "react-modern-drawer";
-
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import {
   Button,
@@ -21,6 +19,7 @@ import ProfileDropdown from "./ProfileDropdown";
 import "react-modern-drawer/dist/index.css";
 import CartItemCard from "./CartItemCard";
 import CartItemsContainer from "../containers/CartItemsContainer";
+import { cartItemsDemo } from "@/types";
 
 export default function TopNavBar() {
   const r = useRouter();
@@ -61,9 +60,9 @@ export default function TopNavBar() {
       </div>
 
       <CartItemsContainer>
-        <CartItemCard />
-        <CartItemCard />
-        <CartItemCard />
+        {cartItemsDemo.map((_, index) => (
+          <CartItemCard key={index} item={_} />
+        ))}
         {/* More product-items in cart... */}
       </CartItemsContainer>
     </>
